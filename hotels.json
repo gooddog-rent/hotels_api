@@ -1,0 +1,105 @@
+{
+    "locations": [{
+            "region": "Bavaro",
+            "hotels": [
+                "Now Larimar",
+                "Whala Bavaro",
+                "Vista Sol",
+                "Impressive",
+                "Melia Caribe Tropical",
+                "Melia Caribe Beach",
+                "Paradisus Melia",
+                "Impressive Resort",
+                "Royalton Punta Cana",
+                "Iberostar PC",
+                "Iberostar Bavaro",
+                "Iberostar Dominicana",
+                "Iberostar Grand Bavaro",
+                "Hard Rock Punta Cana",
+                "Grand Memories Punta Cana",
+                "Occidental Caribe",
+                "Majestic Elegance",
+                "Majestic Colonial",
+                "Fantasia Bahia Principe",
+                "Grand Bahia Tourquesa",
+                "Grand Bahia PC",
+                "Grand Bahia Bavaro",
+                "Bahia Principe Ambar",
+                "Bahia Principe Bavaro",
+                "Riu Palace PC",
+                "Riu Palace Macao",
+                "Riu Palace Bavaro",
+                "Riu Naiboa",
+                "Riu Bamboo",
+                "Palladium Punta Cana",
+                "Occidental Punta Cana",
+                "Vik Arena Blanca",
+                "Ocean Blue",
+                "Princess Bavaro",
+                "Princess Caribe Club",
+                "Princess Tropical",
+                "Princess Punta Cana",
+                "Natura Park",
+                "Catalonia Royal",
+                "Catalonia Bavaro",
+                "Be Live Punta Cana",
+                "Lopesan Costa Bavaro",
+                "Ifa Bavaro",
+                "Barcelo Palace Deluxe",
+                "Barcelo Bavaro Beach"
+            ]
+        },
+        {
+            "region": "Punta Cana",
+            "hotels": [
+                "Punta Cana Int. Airport",
+                "Secrets Royal Beach Hotel"
+            ]
+        },
+        {
+            "region": "Bayahíbe",
+            "hotels": [
+                "Catalonia Gran Dominicus Hotel",
+                "Iberostar Hacienda Dominicus Hotel"
+            ]
+        },
+        {
+            "region": "Uvero Alto",
+            "hotels": [
+                "Dreams Resort Hotel",
+                "Breathless Punta Cana Hotel",
+                "Sirenis Resort Hotel",
+                "Now Onyx Hotel"
+            ]
+        },
+        {
+            "region": "La Romana",
+            "hotels": [
+                "Canoa Coral Beach Hotel",
+                "Casa De Campo",
+                "Catalonia Gran Dominicus",
+                "Gran Bahia Principe La Romana",
+                "Oasis Canoa",
+                "Santana Beach Resort",
+                "Sunscape Casa Del Mar",
+                "Viva Wyndham Dominicus Beach",
+                "Viva Wyndham Dominicus Palace Resort",
+                "La Romana Airport"
+            ]
+        },
+        {
+            "region": "Boca Chica",
+            "hotels": [
+                "Astoria",
+                "Dominican Bay",
+                "Don Juan Beach Resort",
+                "Hamaca Coral Beach Hotel",
+                "Hamaca Coral Hotel",
+                "Hotel Coral Hamaca",
+                "Hotel Don Emilio",
+                "Hotetur Dominican Bay",
+                "Oasis Hamaca"
+            ]
+        }
+    ]
+}

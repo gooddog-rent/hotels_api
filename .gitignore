@@ -1,0 +1,8 @@
+# frontend public wesite
+/public
+
+# private enviroment .env file
+.env
+
+# compiled local binary file
+hotels_api
