@@ -1,8 +1,12 @@
 // docker build -t hotels-api .
 // docker run -p 4000:4000 hotels-api
 
-//TODO: add tls (generate certificate with mkcert)
-//TODO: add logger exporter for prometheus system
+// test requests from cli
+// http GET http://localhost:4000/hotels query==resort limit==10
+// curl -X GET 'http://localhost:4000/hotels?query=resort&limit=10'
+
+//TODO: add tls (generate certificate with mkcert). List of hotels is a public non-sensitive data. Does it really needed?
+//TODO: add logger exporter for prometheus
 //TODO: add API and services tests
 //TODO: add API credentials such as JWT token
 
@@ -15,6 +19,8 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
+	prom "github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 // init is invoked before main()
@@ -51,13 +57,21 @@ func main() {
 	// update hotels
 	go updateHotels(ch, filepath)
 
-	l := Locations{}
+	l := Locations{
+		Counter: Counter{
+			Metrics: Metrics{
+				NewMetrics().counter,
+			},
+		},
+	}
+	prom.MustRegister(l.Metrics.counter)
 
 	// parse json
 	go l.parseJSON(ch)
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/hotels", l.hotels)
+	mux.Handle("/metrics", promhttp.Handler())
 
 	fmt.Printf("Hotels API listening requests on port %s\n", port)
 

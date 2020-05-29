@@ -4,5 +4,6 @@ import "sync"
 
 type Counter struct {
 	counter uint
-	mu sync.Mutex
+	mu      sync.Mutex
+	Metrics
 }

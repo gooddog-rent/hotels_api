@@ -8,15 +8,15 @@ import (
 	"time"
 )
 
-func watchFile(filePath string) error {
+func watchFile(filepath string) error {
 
-	initialStat, err := os.Stat(filePath)
+	initialStat, err := os.Stat(filepath)
 	if err != nil {
 		return err
 	}
 
 	for {
-		stat, err := os.Stat(filePath)
+		stat, err := os.Stat(filepath)
 		if err != nil {
 			return err
 		}

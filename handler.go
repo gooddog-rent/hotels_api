@@ -14,6 +14,12 @@ func (l *Locations) hotels(w http.ResponseWriter, req *http.Request) {
 	l.counter++
 	l.mu.Unlock()
 
+	l.Metrics.counter.Inc()
+
+	if req.Method != http.MethodGet {
+		http.Error(w, "Wrong method used! Only GET method allowed.", http.StatusMethodNotAllowed)
+	}
+
 	log.Printf("%s | API Requests: %d\n", req.Host, l.counter)
 
 	text := req.URL.Query().Get("query")
