@@ -29,9 +29,9 @@ func watchFile(filePath string) error {
 	return nil
 }
 
-func updateHotels(ch chan []byte) {
+func updateHotels(ch chan []byte, filepath string) {
 	for {
-		h, err := ioutil.ReadFile("hotels.json")
+		h, err := ioutil.ReadFile(filepath)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -41,7 +41,7 @@ func updateHotels(ch chan []byte) {
 			log.Println("Invalid JSON syntax in hotels.json file!")
 		}
 
-		err = watchFile("./hotels.json")
+		err = watchFile(filepath)
 		if err != nil {
 			log.Println(err)
 		}

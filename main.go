@@ -5,7 +5,6 @@
 //TODO: add logger exporter for prometheus system
 //TODO: add API and services tests
 //TODO: add API credentials such as JWT token
-//TODO: add .env file for external config (port, path, api key and so on)
 
 package main
 
@@ -13,14 +12,44 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
+
+	"github.com/joho/godotenv"
 )
 
+// init is invoked before main()
+func init() {
+
+	// loads values from .env into the system
+	if err := godotenv.Load(); err != nil {
+		log.Print("No .env file found")
+	}
+}
+
 func main() {
+
+	/* apiKey, exists := os.LookupEnv("HOTELS_API_KEY")
+	if !exists {
+		log.Println("Env variable HOTELS_API_KEY does not exist!")
+	} */
+
+	// get port number
+	port, exists := os.LookupEnv("PORT")
+	if !exists {
+		log.Println("Env variable PORT does not exist!")
+	}
+	port = ":" + port
+
+	// get hotels file
+	filepath, exists := os.LookupEnv("HOTELS_PATH")
+	if !exists {
+		log.Println("Env variable HOTELS_PATH does not exist!")
+	}
 
 	ch := make(chan []byte)
 
 	// update hotels
-	go updateHotels(ch)
+	go updateHotels(ch, filepath)
 
 	l := Locations{}
 
@@ -30,7 +59,6 @@ func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/hotels", l.hotels)
 
-	const port = ":4000"
 	fmt.Printf("Hotels API listening requests on port %s\n", port)
 
 	log.Fatal(http.ListenAndServe(port, limit(mux)))
