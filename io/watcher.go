@@ -1,7 +1,8 @@
-package main
+package io
 
 import (
 	"encoding/json"
+	"hotels_api/api"
 	"io/ioutil"
 	"log"
 	"os"
@@ -29,7 +30,7 @@ func watchFile(filepath string) error {
 	return nil
 }
 
-func updateHotels(ch chan []byte, filepath string) {
+func UpdateHotels(ch chan []byte, filepath string) {
 	for {
 		h, err := ioutil.ReadFile(filepath)
 		if err != nil {
@@ -50,9 +51,9 @@ func updateHotels(ch chan []byte, filepath string) {
 	}
 }
 
-func (l *Locations) parseJSON(ch chan []byte) {
+func ParseJSON(ch chan []byte, locations *api.Locations) {
 	for {
-		err := json.Unmarshal(<-ch, &l)
+		err := json.Unmarshal(<-ch, &locations)
 		if err != nil {
 			log.Fatal(err)
 		}

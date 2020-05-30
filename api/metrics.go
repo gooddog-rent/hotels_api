@@ -1,11 +1,11 @@
-package main
+package api
 
 import (
 	prom "github.com/prometheus/client_golang/prometheus"
 )
 
 type Metrics struct {
-	counter prom.Counter
+	Counter prom.Counter
 }
 
 func NewMetrics() *Metrics {

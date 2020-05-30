@@ -1,4 +1,4 @@
-package main
+package api
 
 import (
 	"encoding/json"
@@ -8,13 +8,13 @@ import (
 	"strings"
 )
 
-func (l *Locations) hotels(w http.ResponseWriter, req *http.Request) {
+func (l *Locations) Hotels(w http.ResponseWriter, req *http.Request) {
 
 	l.mu.Lock()
 	l.counter++
 	l.mu.Unlock()
 
-	l.Metrics.counter.Inc()
+	l.Metrics.Counter.Inc()
 
 	if req.Method != http.MethodGet {
 		http.Error(w, "Wrong method used! Only GET method allowed.", http.StatusMethodNotAllowed)
