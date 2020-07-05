@@ -6,7 +6,7 @@
 // curl -X GET 'http://localhost:4000/hotels?query=resort&limit=10'
 
 //TODO: add tls (generate certificate with mkcert). List of hotels is a public non-sensitive data. Does it really needed?
-//TODO: add a few required metrics for prometheus
+//TODO: add a few required metrics for prometheus (users IP)
 //TODO: add API and services tests
 //TODO: add API credentials such as JWT token
 
@@ -57,7 +57,7 @@ func main() {
 
 	ch := make(chan []byte)
 
-	// update hotels
+	// watch hotels.json file change and auto update hotels
 	go io.UpdateHotels(ch, filepath)
 
 	l := api.Locations{
@@ -74,7 +74,7 @@ func main() {
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/hotels", l.Hotels)
-	mux.Handle("/metrics", promhttp.Handler())
+	mux.Handle("/metrics", promhttp.Handler()) // prometheus metrics
 
 	fmt.Printf("Hotels API listening requests on port %s\n", port)
 

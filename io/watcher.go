@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func watchFile(filepath string) error {
+func watchFile(filepath string, updatetime time.Duration) error {
 
 	initialStat, err := os.Stat(filepath)
 	if err != nil {
@@ -25,7 +25,7 @@ func watchFile(filepath string) error {
 		if stat.Size() != initialStat.Size() || stat.ModTime() != initialStat.ModTime() {
 			break
 		}
-		time.Sleep(2 * time.Second)
+		time.Sleep(updatetime)
 	}
 	return nil
 }
@@ -42,7 +42,7 @@ func UpdateHotels(ch chan []byte, filepath string) {
 			log.Println("Invalid JSON syntax in hotels.json file!")
 		}
 
-		err = watchFile(filepath)
+		err = watchFile(filepath, 15*time.Second)
 		if err != nil {
 			log.Println(err)
 		}

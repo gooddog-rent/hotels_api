@@ -6,3 +6,6 @@
 
 # compiled local binary file
 hotels_api
+
+# test and temp directories and files
+/io/test*

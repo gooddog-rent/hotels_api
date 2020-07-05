@@ -11,6 +11,8 @@ github.com/golang/protobuf/ptypes/timestamp
 # github.com/joho/godotenv v1.3.0
 ## explicit
 github.com/joho/godotenv
+# github.com/julienschmidt/httprouter v1.3.0
+## explicit
 # github.com/matttproud/golang_protobuf_extensions v1.0.1
 github.com/matttproud/golang_protobuf_extensions/pbutil
 # github.com/prometheus/client_golang v1.6.0

@@ -14,13 +14,14 @@ func (l *Locations) Hotels(w http.ResponseWriter, req *http.Request) {
 	l.counter++
 	l.mu.Unlock()
 
+	// prometheus api conuter metric increment
 	l.Metrics.Counter.Inc()
 
 	if req.Method != http.MethodGet {
 		http.Error(w, "Wrong method used! Only GET method allowed.", http.StatusMethodNotAllowed)
 	}
 
-	log.Printf("%s | API Requests: %d\n", req.Host, l.counter)
+	// log.Printf("%s | API Requests: %d\n", req.Host, l.counter)
 
 	text := req.URL.Query().Get("query")
 	limit, err := strconv.Atoi(req.URL.Query().Get("limit"))
@@ -50,6 +51,10 @@ func (l *Locations) Hotels(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Access-Control-Allow-Origin", "http://192.168.1.108:5500")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	// w.Header().Set("Content-Encoding", "gzip")
+	// gz := gzip.NewWriter(w)
+	// json.NewEncoder(gz).Encode(out)
+	// gz.Close()
 
 	w.Write(out)
 }

@@ -59,6 +59,7 @@ func cleanupVisitors() {
 	}
 }
 
+// Limit middleware
 func Limit(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ip, _, err := net.SplitHostPort(r.RemoteAddr)
@@ -73,7 +74,6 @@ func Limit(next http.Handler) http.Handler {
 			http.Error(w, http.StatusText(429), http.StatusTooManyRequests)
 			return
 		}
-
 		next.ServeHTTP(w, r)
 	})
 }
