@@ -1,5 +1,5 @@
-// docker build -t hotels-api .
-// docker run -p 4000:4000 hotels-api
+// docker build -t iqhater/hotels_api .
+// docker run -p 4040:4000 iqhater/hotels_api:latest
 
 // test requests from cli
 // http GET http://localhost:4000/hotels query==resort limit==10
