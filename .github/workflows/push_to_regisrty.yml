@@ -1,0 +1,19 @@
+name: Build and Push Docker image to Registry
+on:
+  push:
+    branches: [master]
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Push to Docker Registry
+        uses: docker/build-push-action@v1
+        with:
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          tags: latest
+          repository: iqhater/hotels_api
