@@ -16,13 +16,11 @@ COPY . .
 
 # build binary without debug info
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags='-s -w'
+# RUN CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -ldflags='-s -w'
+# RUN CGO_ENABLED=0 GOOS=linux GOARCH=arm GOARM=6 go build -ldflags='-s -w'
 
 # generate clean, final image
 FROM scratch
-
-# very important copy .env and hotels files
-COPY .env .env
-COPY hotels.json hotels.json
 
 # copy golang binary into container
 COPY --from=builder /app/hotels_api /app/

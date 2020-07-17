@@ -7,5 +7,8 @@
 # compiled local binary file
 hotels_api
 
+# hotels list
+/hotels
+
 # test and temp directories and files
 /io/test*
