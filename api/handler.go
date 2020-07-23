@@ -70,30 +70,34 @@ func (l *Locations) Hotels(w http.ResponseWriter, req *http.Request) {
 
 	// words := getAllPermutations(strings.Split(text, " "))
 	words := strings.Split(text, " ")
+	limitMapLength := 0
 
 	for _, location := range l.Locations {
+
 		for _, hotel := range location.Hotels {
 
-			if len(filtered.Hotels[location.Region]) < limit/2 && len(filtered.Hotels) < limit {
+			ctr := 0
+			for _, word := range words {
 
-				ctr := 0
-				for _, word := range words {
-					if strings.Count(strings.ToLower(hotel), strings.ToLower(word)) > 0 || strings.Count(strings.ToLower(location.Region), strings.ToLower(word)) == 1 {
-						ctr++
-					}
-				}
+				//TODO: filter by regions in priority
+				/* if strings.Contains(strings.ToLower(location.Region), strings.ToLower(word)) {
+					ctr++
+					// break
+				} */
 
-				if ctr > len(words)-1 {
-					filtered.Hotels[location.Region] = append(filtered.Hotels[location.Region], hotel)
+				// if strings.Count(strings.ToLower(location.Region), strings.ToLower(word)) == 1 && strings.Count(strings.ToLower(hotel), strings.ToLower(word)) > 0 {
+				if strings.Contains(strings.ToLower(location.Region), strings.ToLower(word)) || strings.Count(strings.ToLower(hotel), strings.ToLower(word)) > 0 {
+					// if strings.Count(strings.ToLower(hotel), strings.ToLower(word)) > 0 {
+					ctr++
 				}
+			}
+
+			if ctr > len(words)-1 && limitMapLength < limit {
+				filtered.Hotels[location.Region] = append(filtered.Hotels[location.Region], hotel)
+				limitMapLength++
 			}
 		}
 	}
-
-	// sort by alphabet
-	/* for _, hotels := range filtered.Hotels {
-		sort.Strings(hotels)
-	} */
 
 	out, err := json.Marshal(filtered)
 	if err != nil {
