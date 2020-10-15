@@ -5,11 +5,6 @@
 // http GET http://localhost:4000/hotels query==resort limit==10
 // curl -X GET 'http://localhost:4000/hotels?query=resort&limit=10'
 
-//TODO: add tls (generate certificate with mkcert). List of hotels is a public non-sensitive data. Does it really needed?
-//TODO: add a few required metrics for prometheus (users IP)
-//TODO: add API and services tests
-//TODO: add API credentials such as JWT token
-
 package main
 
 import (
@@ -37,11 +32,6 @@ func init() {
 }
 
 func main() {
-
-	/* apiKey, exists := os.LookupEnv("HOTELS_API_KEY")
-	if !exists {
-		log.Println("Env variable HOTELS_API_KEY does not exist!")
-	} */
 
 	// get port number
 	port, exists := os.LookupEnv("PORT")
