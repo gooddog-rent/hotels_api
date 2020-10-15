@@ -1,4 +1,15 @@
-## Starightforward hotels list API with one route. Hotels json file with check and auto update file changes. No need to restart binary.
+## 🏨 Starightforward hotels list API with one route.
+
+## Description
+
+Simple API with one json custom data file.
+
+### Features
+🔃 - auto update file changes (no need to restart binary)
+
+⚙️ - one JSON flexible file to modify your data
+
+✋ - rate limiter for highload perfomance
 
 ## Setup enviroments
 
