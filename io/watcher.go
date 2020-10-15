@@ -9,6 +9,7 @@ import (
 	"time"
 )
 
+// watchFile function watch for file changes
 func watchFile(filepath string, updatetime time.Duration) error {
 
 	initialStat, err := os.Stat(filepath)
@@ -30,6 +31,8 @@ func watchFile(filepath string, updatetime time.Duration) error {
 	return nil
 }
 
+// UpdateHotels function watch to hotels.json file changes
+// and check json is valid then send updateed data into channel
 func UpdateHotels(ch chan []byte, filepath string) {
 	for {
 		h, err := ioutil.ReadFile(filepath)
@@ -51,6 +54,8 @@ func UpdateHotels(ch chan []byte, filepath string) {
 	}
 }
 
+// ParseJSON function gets data byte channel with locations
+// and unmarshal data in json
 func ParseJSON(ch chan []byte, locations *api.Locations) {
 	for {
 		err := json.Unmarshal(<-ch, &locations)

@@ -20,6 +20,7 @@ import (
 
 	"hotels_api/api"
 	"hotels_api/io"
+	mid "hotels_api/middleware"
 
 	"github.com/joho/godotenv"
 	prom "github.com/prometheus/client_golang/prometheus"
@@ -73,7 +74,7 @@ func main() {
 	go io.ParseJSON(ch, &l)
 
 	mux := http.NewServeMux()
-	mux.HandleFunc("/hotels", l.Hotels)
+	mux.HandleFunc("/hotels", mid.ShowLog(l.Hotels))
 	mux.Handle("/metrics", promhttp.Handler()) // prometheus metrics
 
 	fmt.Printf("Hotels API listening requests on port %s\n", port)
