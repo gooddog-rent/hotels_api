@@ -32,7 +32,9 @@ func getVisitor(ip string) *rate.Limiter {
 
 	v, exists := visitors[ip]
 	if !exists {
-		limiter := rate.NewLimiter(2, 7)
+
+		limiter := rate.NewLimiter(2, 7) // 2 is a number of events per second
+
 		// Include the current time when creating a new visitor.
 		visitors[ip] = &visitor{limiter, time.Now()}
 		return limiter
@@ -61,8 +63,8 @@ func cleanupVisitors() {
 
 // Limit middleware
 func Limit(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		ip, _, err := net.SplitHostPort(r.RemoteAddr)
+	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+		ip, _, err := net.SplitHostPort(req.RemoteAddr)
 		if err != nil {
 			log.Println(err.Error())
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
@@ -71,9 +73,9 @@ func Limit(next http.Handler) http.Handler {
 
 		limiter := getVisitor(ip)
 		if !limiter.Allow() {
-			http.Error(w, http.StatusText(429), http.StatusTooManyRequests)
+			http.Error(w, http.StatusText(http.StatusTooManyRequests), http.StatusTooManyRequests)
 			return
 		}
-		next.ServeHTTP(w, r)
+		next.ServeHTTP(w, req)
 	})
 }

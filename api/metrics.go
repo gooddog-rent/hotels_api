@@ -9,6 +9,7 @@ type Metrics struct {
 	Counter prom.Counter // increment api requests
 }
 
+// init new Metrics struct for prometheus
 func NewMetrics() *Metrics {
 	return &Metrics{
 		prom.NewCounter(prom.CounterOpts{
