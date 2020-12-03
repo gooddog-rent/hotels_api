@@ -25,7 +25,7 @@ docker-compose up -d
 
 ---
 
-**Get hotels**
+**Get hotels (API endpoint)**
 ----
 Returns json data with list of region and hotels.
 
@@ -85,7 +85,7 @@ Returns json data with list of region and hotels.
   * **Code:** 400 BAD REQUEST <br />
     **Content:** `HTTP page 400 Bad Request`
 
-  * **Code:** 405 Method Not Allowed <br />
+  * **Code:** 405 METHOD NOT ALLOWED <br />
     **Content:** `HTTP page 405 Method Not Allowed`
 
 * **Sample Call:**
