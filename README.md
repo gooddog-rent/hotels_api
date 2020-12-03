@@ -31,7 +31,7 @@ Returns json data with list of region and hotels.
 
 * **URL**
 
-/hotels
+   /hotels
 
 * **Method:**
 
