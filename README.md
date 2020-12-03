@@ -60,7 +60,7 @@ Returns json data with list of region and hotels.
         "hotels":{
            "Bavaro":[
               "Impressive Resorts Spas",
-              "Melia Punta Cana Beach Resort    Adults  Only",
+              "Melia Punta Cana Beach Resort Adults Only",
               "Royalton Bavaro Resort Spa"
            ],
            "La Romana":[
@@ -69,11 +69,11 @@ Returns json data with list of region and hotels.
            ],
            "Punta Cana Hotels":[
               "The Westin Punta Сana Resort Club",
-              "Tortuga Bay Hotel at Punta Сana      Resort Club"
+              "Tortuga Bay Hotel at Punta Сana Resort Club"
            ],
            "Uvero Alto":[
               "Dreams Punta Cana Resort Hotel",
-              "Nickelodeon Hotels Resorts Punta     Cana",
+              "Nickelodeon Hotels Resorts Punta Cana",
               "Sensatori Resort Punta Cana"
            ]
         }
