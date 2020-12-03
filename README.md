@@ -88,6 +88,12 @@ Returns json data with list of region and hotels.
   * **Code:** 405 METHOD NOT ALLOWED <br />
     **Content:** `HTTP page 405 Method Not Allowed`
 
+  * **Code:** 429 TOO MANY REQUESTS <br />
+    **Content:** `HTTP page 429 Too Many Requests`
+
+  * **Code:** 500 INTERNAL SERVER ERROR <br />
+    **Content:** `HTTP page 500 Internal Server Error`
+
 * **Sample Call:**
 
   ```shell
