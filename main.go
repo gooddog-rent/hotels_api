@@ -11,15 +11,13 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 
 	"hotels_api/api"
+	"hotels_api/config"
 	"hotels_api/io"
 	mid "hotels_api/middleware"
 
 	"github.com/joho/godotenv"
-	prom "github.com/prometheus/client_golang/prometheus"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 // init is invoked before main()
@@ -33,41 +31,23 @@ func init() {
 
 func main() {
 
-	// get port number
-	port, exists := os.LookupEnv("PORT")
-	if !exists {
-		log.Println("Env variable PORT does not exist!")
-	}
-	port = ":" + port
-
-	// get hotels file
-	filepath, exists := os.LookupEnv("HOTELS_PATH")
-	if !exists {
-		log.Println("Env variable HOTELS_PATH does not exist!")
-	}
+	// init config environments
+	cfg := config.NewConfig()
 
 	ch := make(chan []byte)
 
 	// watch hotels.json file change and auto update hotels
-	go io.UpdateHotels(ch, filepath)
+	go io.UpdateHotels(ch, cfg.HOTELS_PATH)
 
-	l := api.Locations{
-		Counter: api.Counter{
-			Metrics: api.Metrics{
-				Counter: api.NewMetrics().Counter,
-			},
-		},
-	}
-	prom.MustRegister(l.Metrics.Counter)
+	l := api.Locations{}
 
 	// parse json
 	go io.ParseJSON(ch, &l)
 
 	mux := http.NewServeMux()
-	mux.HandleFunc("/hotels", mid.ShowLog(l.Hotels))
-	mux.Handle("/metrics", promhttp.Handler()) // prometheus metrics
+	mux.HandleFunc("/hotels", mid.ShowLog(l.GetHotels))
 
-	fmt.Printf("Hotels API listening requests on port %s\n", port)
+	fmt.Printf("Hotels API listening requests on port: %s\n", cfg.HTTP_PORT)
 
-	log.Fatal(http.ListenAndServe(port, api.Limit(mux)))
+	log.Fatal(http.ListenAndServe(":"+cfg.HTTP_PORT, mid.Limit(mux)))
 }

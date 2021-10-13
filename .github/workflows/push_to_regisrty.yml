@@ -5,12 +5,29 @@ on:
 
 jobs:
   tests:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go-version: [1.14.x, 1.15.x, 1.16.x, 1.17.x]
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
     steps:
-      - name: Checkout repo
+      - name: Install Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: ${{ matrix.go-version }}
+
+      - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Run tests
+      - name: Setup environments
+        env:
+          HTTP_PORT: ${{ secrets.HTTP_PORT}}
+          HOTELS_PATH: ${{ secrets.HOTELS_PATH }}
+        run: |
+          echo "HTTP_PORT=$HTTP_PORT" >> .env
+          echo "HOTELS_PATH=$HOTELS_PATH" >> .env
+
+      - name: Run tests and show coverage
         run: go test -race -v -cover ./...
 
   deploy:
