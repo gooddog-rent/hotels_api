@@ -2,6 +2,8 @@
 
 ---
 
+[![Tests](https://github.com/gooddog-rent/hotels_api/actions/workflows/develop_tests.yml/badge.svg?branch=develop)](https://github.com/gooddog-rent/hotels_api/actions/workflows/develop_tests.yml)
+
 ## Description
 
 Simple API with one json custom data file.
