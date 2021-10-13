@@ -57,10 +57,13 @@ func UpdateHotels(ch chan []byte, filepath string) {
 // ParseJSON function gets data byte channel with locations
 // and unmarshal data in json
 func ParseJSON(ch chan []byte, locations *api.Locations) {
+
 	for {
 		err := json.Unmarshal(<-ch, &locations)
 		if err != nil {
 			log.Fatal(err)
 		}
+
+		locations.BuildSuffixTree()
 	}
 }

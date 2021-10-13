@@ -11,6 +11,9 @@ github.com/golang/protobuf/ptypes/timestamp
 # github.com/joho/godotenv v1.3.0
 ## explicit
 github.com/joho/godotenv
+# github.com/ljfuyuan/suffixtree v0.0.0-20210126021338-399a0a102130
+## explicit
+github.com/ljfuyuan/suffixtree
 # github.com/matttproud/golang_protobuf_extensions v1.0.1
 github.com/matttproud/golang_protobuf_extensions/pbutil
 # github.com/prometheus/client_golang v1.7.1
@@ -28,6 +31,8 @@ github.com/prometheus/common/model
 github.com/prometheus/procfs
 github.com/prometheus/procfs/internal/fs
 github.com/prometheus/procfs/internal/util
+# github.com/spacewander/go-suffix-tree v0.0.0-20191010040751-0865e368c784
+## explicit
 # golang.org/x/sys v0.0.0-20200615200032-f1bc736245b1
 golang.org/x/sys/internal/unsafeheader
 golang.org/x/sys/unix

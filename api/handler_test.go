@@ -10,19 +10,16 @@ const URL = "http://localhost:4000/hotels"
 
 func TestReponseOK(t *testing.T) {
 
-	l := Locations{
-		Counter: Counter{
-			Metrics: Metrics{
-				Counter: NewMetrics().Counter,
-			},
-		},
-	}
+	l := Locations{}
 
 	query := "?query=bav&limit=4"
 	req := httptest.NewRequest(http.MethodGet, URL+query, nil)
 	w := httptest.NewRecorder()
 
-	l.Hotels(w, req)
+	// build suffix search tree
+	l.BuildSuffixTree()
+
+	l.GetHotels(w, req)
 
 	resp := w.Result()
 
@@ -33,19 +30,13 @@ func TestReponseOK(t *testing.T) {
 
 func TestReponseBadRequest(t *testing.T) {
 
-	l := Locations{
-		Counter: Counter{
-			Metrics: Metrics{
-				Counter: NewMetrics().Counter,
-			},
-		},
-	}
+	l := Locations{}
 
 	query := "?query=&limit=4" //TODO: add more cases
 	req := httptest.NewRequest(http.MethodGet, URL+query, nil)
 	w := httptest.NewRecorder()
 
-	l.Hotels(w, req)
+	l.GetHotels(w, req)
 
 	resp := w.Result()
 
@@ -56,19 +47,13 @@ func TestReponseBadRequest(t *testing.T) {
 
 func TestBadMethod(t *testing.T) {
 
-	l := Locations{
-		Counter: Counter{
-			Metrics: Metrics{
-				Counter: NewMetrics().Counter,
-			},
-		},
-	}
+	l := Locations{}
 
 	query := "?query=riu&limit=4"
 	req := httptest.NewRequest(http.MethodPost, URL+query, nil)
 	w := httptest.NewRecorder()
 
-	l.Hotels(w, req)
+	l.GetHotels(w, req)
 
 	resp := w.Result()
 
@@ -79,19 +64,13 @@ func TestBadMethod(t *testing.T) {
 
 func TestInvalidQuery(t *testing.T) {
 
-	l := Locations{
-		Counter: Counter{
-			Metrics: Metrics{
-				Counter: NewMetrics().Counter,
-			},
-		},
-	}
+	l := Locations{}
 
 	query := "?q"
 	req := httptest.NewRequest(http.MethodGet, URL+query, nil)
 	w := httptest.NewRecorder()
 
-	l.Hotels(w, req)
+	l.GetHotels(w, req)
 
 	resp := w.Result()
 
@@ -102,19 +81,13 @@ func TestInvalidQuery(t *testing.T) {
 
 func TestInvalidLimit(t *testing.T) {
 
-	l := Locations{
-		Counter: Counter{
-			Metrics: Metrics{
-				Counter: NewMetrics().Counter,
-			},
-		},
-	}
+	l := Locations{}
 
 	query := "?query=bav&li"
 	req := httptest.NewRequest(http.MethodGet, URL+query, nil)
 	w := httptest.NewRecorder()
 
-	l.Hotels(w, req)
+	l.GetHotels(w, req)
 
 	resp := w.Result()
 
@@ -125,19 +98,13 @@ func TestInvalidLimit(t *testing.T) {
 
 func TestLimitQueryNotNumber(t *testing.T) {
 
-	l := Locations{
-		Counter: Counter{
-			Metrics: Metrics{
-				Counter: NewMetrics().Counter,
-			},
-		},
-	}
+	l := Locations{}
 
 	query := "?query=bav&limit=four"
 	req := httptest.NewRequest(http.MethodGet, URL+query, nil)
 	w := httptest.NewRecorder()
 
-	l.Hotels(w, req)
+	l.GetHotels(w, req)
 
 	resp := w.Result()
 

@@ -7,6 +7,7 @@
 Simple API with one json custom data file.
 
 ### Features
+
 🔃 - auto update file changes (no need to restart binary)
 
 ⚙️ - one JSON flexible file to modify your data
@@ -19,83 +20,83 @@ Simple API with one json custom data file.
 
 ### Run in Docker container via docker compose (example)
 
-``` bash
+```bash
 docker-compose up -d
 ```
 
 ---
 
-**Get hotels (API endpoint)**
-----
+## **Get hotels (API endpoint)**
+
 Returns json data with list of region and hotels.
 
-* **URL**
+- **URL**
 
-   /hotels
+  /hotels
 
-* **Method:**
+- **Method:**
 
   `GET`
-  
-*  **URL Params** 
 
-   **Required:**
- 
-   `query=[string]`
+- **URL Params**
 
-   **Required:**
- 
-   `limit=[decimal]`
+  **Required:**
 
-* **Data Params**
+  `query=[string]`
 
-    None
+  Hotel search query string
 
-* **Success Response:**
+  **Required:**
 
-  * **Code:** 200 <br />
-    **Content:** 
+  `limit=[decimal]`
+
+  Limit hotels per one region
+
+- **Success Response:**
+
+  - **Code:** 200 <br />
+    **Content:**
     ```json
     {
-        "hotels":{
-           "Bavaro":[
-              "Impressive Resorts Spas",
-              "Melia Punta Cana Beach Resort Adults Only",
-              "Royalton Bavaro Resort Spa"
-           ],
-           "La Romana":[
-              "Santana Beach Resort",
-              "Viva Wyndham Dominicus Palace Resort"
-           ],
-           "Punta Cana Hotels":[
-              "The Westin Punta Сana Resort Club",
-              "Tortuga Bay Hotel at Punta Сana Resort Club"
-           ],
-           "Uvero Alto":[
-              "Dreams Punta Cana Resort Hotel",
-              "Nickelodeon Hotels Resorts Punta Cana",
-              "Sensatori Resort Punta Cana"
-           ]
-        }
+      "hotels": {
+        "Bavaro": [
+          "Impressive Resorts Spas",
+          "Melia Punta Cana Beach Resort Adults Only",
+          "Royalton Bavaro Resort Spa"
+        ],
+        "La Romana": [
+          "Santana Beach Resort",
+          "Viva Wyndham Dominicus Palace Resort"
+        ],
+        "Punta Cana Hotels": [
+          "The Westin Punta Сana Resort Club",
+          "Tortuga Bay Hotel at Punta Сana Resort Club"
+        ],
+        "Uvero Alto": [
+          "Dreams Punta Cana Resort Hotel",
+          "Nickelodeon Hotels Resorts Punta Cana",
+          "Sensatori Resort Punta Cana"
+        ]
+      }
     }
     ```
- 
-* **Error Response:**
 
-  * **Code:** 400 BAD REQUEST <br />
+- **Error Response:**
+
+  - **Code:** 400 BAD REQUEST <br />
     **Content:** `HTTP page 400 Bad Request`
 
-  * **Code:** 405 METHOD NOT ALLOWED <br />
+  - **Code:** 405 METHOD NOT ALLOWED <br />
     **Content:** `HTTP page 405 Method Not Allowed`
 
-  * **Code:** 429 TOO MANY REQUESTS <br />
+  - **Code:** 429 TOO MANY REQUESTS <br />
     **Content:** `HTTP page 429 Too Many Requests`
 
-  * **Code:** 500 INTERNAL SERVER ERROR <br />
+  - **Code:** 500 INTERNAL SERVER ERROR <br />
     **Content:** `HTTP page 500 Internal Server Error`
 
-* **Sample Call:**
+- **Sample Call:**
 
   ```shell
-  curl "https://gooddog.rent/hotels?query=resort&limit=10"
+  curl "https://gooddog.rent/hotels?query=Resort&limit=10"
   ```
