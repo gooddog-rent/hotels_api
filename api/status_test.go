@@ -20,3 +20,12 @@ func TestWriteHeaderValid(t *testing.T) {
 		t.Errorf("Wrong Status Code in header!: got %d", sr.StatusCode)
 	}
 }
+
+func TestNotEmptyNewStatusHTTP(t *testing.T) {
+	rr := httptest.NewRecorder()
+	result := NewStatusHTTP(rr)
+
+	if result == nil {
+		t.Errorf("NewStatusHTTP must return non nil!: got %v", result)
+	}
+}
