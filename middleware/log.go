@@ -1,9 +1,11 @@
 package middleware
 
 import (
+	"fmt"
 	"hotels_api/api"
-	"log"
 	"net/http"
+	"os"
+	"text/tabwriter"
 	"time"
 )
 
@@ -16,6 +18,9 @@ func ShowLog(next http.HandlerFunc) http.HandlerFunc {
 		next.ServeHTTP(sr, req)
 
 		statusCode := sr.StatusCode
-		log.Printf("%s %s - %s - [%d: %s] - %v\n", req.Method, req.URL.String(), req.RemoteAddr, statusCode, http.StatusText(statusCode), time.Since(t))
+
+		tw := tabwriter.NewWriter(os.Stdout, 28, 4, 1, ' ', tabwriter.Debug)
+		fmt.Fprintf(tw, "[%d: %s]\t %v\t %s\t %s\t %s\n", statusCode, http.StatusText(statusCode), time.Since(t), req.RemoteAddr, req.Method, req.URL.String())
+		tw.Flush()
 	})
 }
