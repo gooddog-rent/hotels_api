@@ -14,7 +14,7 @@ func (l *Locations) BuildSuffixTree() {
 	// build hotels list
 	for _, locs := range l.Locations {
 		for _, hotel := range locs.Hotels {
-			hotels = append(hotels, locs.Region+";"+hotel)
+			hotels = append(hotels, strings.ToLower(locs.Region)+";"+strings.ToLower(hotel))
 		}
 	}
 
@@ -35,11 +35,11 @@ func (l *Locations) SearchInSuffixTree(text string, limit int) FilteredHotels {
 		make(map[string][]string),
 	}
 
-	indexes := l.Tree.Search(text, -1)
+	indexes := l.Tree.Search(strings.ToLower(text), -1)
 
 	for _, index := range indexes {
 
-		regionAndHotel := strings.Split(l.HotelsList[index], ";")
+		regionAndHotel := strings.Split(strings.Title(l.HotelsList[index]), ";")
 		region := regionAndHotel[0]
 		hotel := regionAndHotel[1]
 
