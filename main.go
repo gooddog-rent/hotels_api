@@ -27,6 +27,9 @@ func init() {
 	if err := godotenv.Load(); err != nil {
 		log.Print("No .env file found. Env variables should be loaded.")
 	}
+
+	// init cache storage
+	mid.CacheStore = mid.NewCache()
 }
 
 func main() {
@@ -45,7 +48,7 @@ func main() {
 	go io.ParseJSON(ch, &l)
 
 	mux := http.NewServeMux()
-	mux.HandleFunc("/hotels", mid.ShowLog(l.GetHotels))
+	mux.HandleFunc("/hotels", mid.ShowLog(mid.CacheResponse("5m", l.GetHotels)))
 
 	fmt.Printf("Hotels API listening requests on port: %s\n", cfg.HTTP_PORT)
 

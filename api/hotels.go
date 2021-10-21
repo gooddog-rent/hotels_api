@@ -1,7 +1,7 @@
 package api
 
 import (
-	"github.com/ljfuyuan/suffixtree"
+	"hotels_api/suffixtree"
 )
 
 // Location struct store Region and slice of hotels
