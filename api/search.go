@@ -3,7 +3,7 @@ package api
 import (
 	"strings"
 
-	"github.com/ljfuyuan/suffixtree"
+	"hotels_api/suffixtree"
 )
 
 // BuildSuffixTree method create a new search tree with regions and hotels
