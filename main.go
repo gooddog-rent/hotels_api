@@ -48,7 +48,8 @@ func main() {
 	go io.ParseJSON(ch, &l)
 
 	mux := http.NewServeMux()
-	mux.HandleFunc("/hotels", mid.ShowLog(mid.CacheResponse("5m", l.GetHotels)))
+	cacheDuration := "5m"
+	mux.HandleFunc("/hotels", mid.ShowLog(mid.CustomHeaders(cacheDuration, mid.CacheResponse(cacheDuration, l.GetHotels))))
 
 	fmt.Printf("Hotels API listening requests on port: %s\n", cfg.HTTP_PORT)
 
