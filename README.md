@@ -4,6 +4,8 @@
 
 [![Tests](https://github.com/gooddog-rent/hotels_api/actions/workflows/develop_tests.yml/badge.svg?branch=develop)](https://github.com/gooddog-rent/hotels_api/actions/workflows/develop_tests.yml)
 
+[![Build and Push Docker image to Registry](https://github.com/gooddog-rent/hotels_api/actions/workflows/push_to_regisrty.yml/badge.svg?branch=master)](https://github.com/gooddog-rent/hotels_api/actions/workflows/push_to_regisrty.yml)
+
 ## Description
 
 Simple API with one json custom data file.
