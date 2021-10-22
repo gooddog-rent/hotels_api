@@ -18,6 +18,8 @@ Simple API with one json custom data file.
 
 ✋ - rate limiter for highload perfomance
 
+💵 - in-memory cache
+
 ## Setup enviroments
 
 - Create .env file at your root project folder and fill it with your data (see .env.example to reference)
