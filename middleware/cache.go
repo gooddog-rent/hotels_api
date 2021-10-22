@@ -66,22 +66,16 @@ func (c Cache) Set(key string, content []byte, duration time.Duration) {
 func CacheResponse(duration string, next http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 
-		w.Header().Set("Content-Type", "application/json")
-
-		d, err := time.ParseDuration(duration)
-		if err != nil {
-			log.Println(err)
-			http.Error(w, "500 Internal Server Error!", http.StatusInternalServerError)
-			return
-		}
-		w.Header().Set("Cache-Control", "private, max-age="+d.String())
-
 		content := CacheStore.Get(req.RequestURI)
 		if content != nil {
 			log.Println("Cached response.")
 			w.Write(content)
 		} else {
 			c := httptest.NewRecorder()
+
+			//TODO: fix to dublicate here from customHeaders middleware
+			c.Header().Set("Content-Type", "application/json")
+
 			next(c, req)
 
 			for k, v := range c.HeaderMap {
