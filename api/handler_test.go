@@ -1,6 +1,7 @@
 package api
 
 import (
+	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -14,101 +15,46 @@ func TestReponseOK(t *testing.T) {
 
 	query := "?query=bav&limit=4"
 	req := httptest.NewRequest(http.MethodGet, URL+query, nil)
-	w := httptest.NewRecorder()
+	rr := httptest.NewRecorder()
 
 	// build suffix search tree
 	l.BuildSuffixTree()
 
-	l.GetHotels(w, req)
+	l.GetHotels(rr, req)
 
-	resp := w.Result()
+	resp := rr.Result()
 
 	if resp.StatusCode != http.StatusOK || req.Method != http.MethodGet {
 		t.Errorf("Bad response status code! Excpect: %d Have: %d", http.StatusOK, resp.StatusCode)
 	}
 }
 
-func TestReponseBadRequest(t *testing.T) {
+func TestInvalidParseJson(t *testing.T) {
 
-	l := Locations{}
-
-	query := "?query=&limit=4" //TODO: add more cases
+	query := "?query=bav&limit=4"
 	req := httptest.NewRequest(http.MethodGet, URL+query, nil)
-	w := httptest.NewRecorder()
+	rr := httptest.NewRecorder()
 
-	l.GetHotels(w, req)
+	getHotelsHandler := func(w http.ResponseWriter, req *http.Request) {
 
-	resp := w.Result()
+		x := map[string]interface{}{
+			"foo": make(chan int),
+		}
 
-	if resp.StatusCode != http.StatusBadRequest || req.Method != http.MethodGet {
-		t.Errorf("Bad response status code! Excpect: %d Have: %d", http.StatusBadRequest, resp.StatusCode)
+		// marshal json result
+		_, err := json.Marshal(x)
+		if err != nil {
+			http.Error(rr, "500 Internal Server Error!", http.StatusInternalServerError)
+			return
+		}
 	}
-}
 
-func TestBadMethod(t *testing.T) {
+	handler := http.HandlerFunc(getHotelsHandler)
+	handler(rr, req)
 
-	l := Locations{}
+	resp := rr.Result()
 
-	query := "?query=riu&limit=4"
-	req := httptest.NewRequest(http.MethodPost, URL+query, nil)
-	w := httptest.NewRecorder()
-
-	l.GetHotels(w, req)
-
-	resp := w.Result()
-
-	if resp.StatusCode != http.StatusMethodNotAllowed || req.Method != http.MethodPost {
-		t.Errorf("Bad response status code! Excpect: %d Have: %d", http.StatusBadRequest, resp.StatusCode)
-	}
-}
-
-func TestInvalidQuery(t *testing.T) {
-
-	l := Locations{}
-
-	query := "?q"
-	req := httptest.NewRequest(http.MethodGet, URL+query, nil)
-	w := httptest.NewRecorder()
-
-	l.GetHotels(w, req)
-
-	resp := w.Result()
-
-	if resp.StatusCode != http.StatusBadRequest {
-		t.Errorf("Bad response status code! Excpect: %d Have: %d", http.StatusBadRequest, resp.StatusCode)
-	}
-}
-
-func TestInvalidLimit(t *testing.T) {
-
-	l := Locations{}
-
-	query := "?query=bav&li"
-	req := httptest.NewRequest(http.MethodGet, URL+query, nil)
-	w := httptest.NewRecorder()
-
-	l.GetHotels(w, req)
-
-	resp := w.Result()
-
-	if resp.StatusCode != http.StatusBadRequest {
-		t.Errorf("Bad response status code! Excpect: %d Have: %d", http.StatusBadRequest, resp.StatusCode)
-	}
-}
-
-func TestLimitQueryNotNumber(t *testing.T) {
-
-	l := Locations{}
-
-	query := "?query=bav&limit=four"
-	req := httptest.NewRequest(http.MethodGet, URL+query, nil)
-	w := httptest.NewRecorder()
-
-	l.GetHotels(w, req)
-
-	resp := w.Result()
-
-	if resp.StatusCode != http.StatusBadRequest {
-		t.Errorf("Bad response status code! Excpect: %d Have: %d", http.StatusBadRequest, resp.StatusCode)
+	if resp.StatusCode != http.StatusInternalServerError || req.Method != http.MethodGet {
+		t.Errorf("Bad response status code! Excpect: %d Have: %d", http.StatusInternalServerError, resp.StatusCode)
 	}
 }

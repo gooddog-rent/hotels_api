@@ -1,21 +1,12 @@
 package middleware
 
 import (
-	"log"
 	"net/http"
-	"time"
 )
 
 // CustomHeaders middleware handler setup CORS and other headers
-func CustomHeaders(cacheDuration string, next http.HandlerFunc) http.HandlerFunc {
+func (c Cache) CustomHeaders(next http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
-
-		d, err := time.ParseDuration(cacheDuration)
-		if err != nil {
-			log.Println(err)
-			http.Error(w, "500 Internal Server Error!", http.StatusInternalServerError)
-			return
-		}
 
 		// CORS headers
 		w.Header().Set("Access-Control-Allow-Origin", "*") // change to host domain for private
@@ -24,7 +15,11 @@ func CustomHeaders(cacheDuration string, next http.HandlerFunc) http.HandlerFunc
 
 		// JSON and Cache headers
 		w.Header().Set("Content-Type", "application/json")
-		w.Header().Set("Cache-Control", "private, max-age="+d.String())
+		w.Header().Set("Cache-Control", "private, max-age="+c.duration)
+
+		// secure headers
+		w.Header().Set("X-XSS-Protection", "1; mode=block")
+		w.Header().Set("X-Frame-Options", "deny")
 
 		next.ServeHTTP(w, req)
 	})

@@ -18,6 +18,8 @@ Simple API with one json custom data file.
 
 ✋ - rate limiter for highload perfomance
 
+💵 - in-memory cache
+
 ## Setup enviroments
 
 - Create .env file at your root project folder and fill it with your data (see .env.example to reference)
@@ -102,5 +104,5 @@ Returns json data with list of region and hotels.
 - **Sample Call:**
 
   ```shell
-  curl "https://gooddog.rent/hotels?query=Resort&limit=10"
+  curl "https://gooddog.rent/hotels?query=resort&limit=10"
   ```

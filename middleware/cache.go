@@ -26,15 +26,17 @@ func (item Item) Expired() bool {
 
 // Cache struct for caching strings in memory
 type Cache struct {
-	items map[string]Item
-	mu    *sync.RWMutex
+	items    map[string]Item
+	mu       *sync.RWMutex
+	duration string
 }
 
 // NewCache creates a new in memory Cache
 func NewCache() *Cache {
 	return &Cache{
-		items: make(map[string]Item),
-		mu:    &sync.RWMutex{},
+		items:    make(map[string]Item),
+		mu:       &sync.RWMutex{},
+		duration: "10s",
 	}
 }
 
@@ -63,30 +65,31 @@ func (c Cache) Set(key string, content []byte, duration time.Duration) {
 }
 
 // CacheResponse middleware
-func CacheResponse(duration string, next http.HandlerFunc) http.HandlerFunc {
+func (c *Cache) CacheResponse(next http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 
 		content := CacheStore.Get(req.RequestURI)
 		if content != nil {
-			log.Println("Cached response.")
+			// log.Println("Cached response.")
 			w.Write(content)
 		} else {
-			c := httptest.NewRecorder()
+			rr := httptest.NewRecorder()
 
 			//TODO: fix to dublicate here from customHeaders middleware
-			c.Header().Set("Content-Type", "application/json")
+			rr.Header().Set("Content-Type", "application/json")
 
-			next(c, req)
+			next(rr, req)
 
-			for k, v := range c.HeaderMap {
+			for k, v := range rr.HeaderMap {
 				w.Header()[k] = v
 			}
 
-			w.WriteHeader(c.Code)
-			content := c.Body.Bytes()
+			w.WriteHeader(rr.Code)
+			content := rr.Body.Bytes()
 
-			if d, err := time.ParseDuration(duration); err == nil {
-				log.Printf("New page cached: %s for %s\n", req.RequestURI, duration)
+			if d, err := time.ParseDuration(c.duration); err == nil {
+
+				// log.Printf("New page cached: %s for %s\n", req.RequestURI, c.duration)
 				CacheStore.Set(req.RequestURI, content, d)
 			} else {
 				log.Printf("Page not cached. err: %s\n", err)
