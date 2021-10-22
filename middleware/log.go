@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-// showLog middleware handler shows network data log info
+// ShowLog middleware handler shows network data log info
 func ShowLog(next http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		t := time.Now()

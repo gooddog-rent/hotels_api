@@ -104,5 +104,5 @@ Returns json data with list of region and hotels.
 - **Sample Call:**
 
   ```shell
-  curl "https://gooddog.rent/hotels?query=Resort&limit=10"
+  curl "https://gooddog.rent/hotels?query=resort&limit=10"
   ```

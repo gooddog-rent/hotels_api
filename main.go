@@ -1,10 +1,3 @@
-// docker build -t iqhater/hotels_api .
-// docker run -p 4040:4000 iqhater/hotels_api:latest
-
-// test requests from cli
-// http GET http://localhost:4000/hotels query==resort limit==10
-// curl -X GET 'http://localhost:4000/hotels?query=resort&limit=10'
-
 package main
 
 import (
@@ -27,9 +20,6 @@ func init() {
 	if err := godotenv.Load(); err != nil {
 		log.Print("No .env file found. Env variables should be loaded.")
 	}
-
-	// init cache storage
-	mid.CacheStore = mid.NewCache()
 }
 
 func main() {
@@ -47,9 +37,12 @@ func main() {
 	// parse json
 	go io.ParseJSON(ch, &l)
 
+	// init cache storage
+	cache := mid.NewCache()
+	mid.CacheStore = cache
+
 	mux := http.NewServeMux()
-	cacheDuration := "5m"
-	mux.HandleFunc("/hotels", mid.ShowLog(mid.CustomHeaders(cacheDuration, mid.CacheResponse(cacheDuration, l.GetHotels))))
+	mux.HandleFunc("/hotels", mid.ShowLog(cache.CustomHeaders(mid.ValidateRequest(cache.CacheResponse(l.GetHotels)))))
 
 	fmt.Printf("Hotels API listening requests on port: %s\n", cfg.HTTP_PORT)
 

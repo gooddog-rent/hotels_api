@@ -11,45 +11,15 @@ import (
 // GetHotels method handle requests and response with filtered hotels
 func (l *Locations) GetHotels(w http.ResponseWriter, req *http.Request) {
 
-	// check on correct request method
-	if req.Method != http.MethodGet {
-		http.Error(w, "Wrong method used! Only GET method allowed.", http.StatusMethodNotAllowed)
-		return
-	}
-
+	// all request validations are located in separate validateRequest middleware
 	// parse encoded query params to map
-	params, err := url.ParseQuery(req.URL.Query().Encode())
-	if err != nil {
-		http.Error(w, "Invalid query parameters!", http.StatusBadRequest)
-		return
-	}
-
-	// check if "query" word is exists
-	if _, ok := params["query"]; !ok {
-		http.Error(w, "'query' parameter does not exist or bad value!", http.StatusBadRequest)
-		return
-	}
-
-	// check if "limit" word is exists
-	if _, ok := params["limit"]; !ok {
-		http.Error(w, "'limit' parameter does not exist or bad value!", http.StatusBadRequest)
-		return
-	}
+	params, _ := url.ParseQuery(req.URL.Query().Encode())
 
 	// parse search query
 	text := params.Get("query")
-	if text == "" {
-		http.Error(w, "'query' value is empty!", http.StatusBadRequest)
-		return
-	}
 
 	// convert limit value to string
-	limit, err := strconv.Atoi(params.Get("limit"))
-	if err != nil {
-		log.Println(err)
-		http.Error(w, "'limit' value must be integer!", http.StatusBadRequest)
-		return
-	}
+	limit, _ := strconv.Atoi(params.Get("limit"))
 
 	filtered := l.SearchInSuffixTree(text, limit)
 
