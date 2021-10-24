@@ -36,7 +36,7 @@ func NewCache() *Cache {
 	return &Cache{
 		items:    make(map[string]Item),
 		mu:       &sync.RWMutex{},
-		duration: "10m",
+		duration: "10s",
 	}
 }
 
