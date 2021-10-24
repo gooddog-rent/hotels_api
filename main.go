@@ -11,6 +11,7 @@ import (
 	mid "hotels_api/middleware"
 
 	"github.com/joho/godotenv"
+	"github.com/sh7dm/brotlihandler"
 )
 
 // init is invoked before main()
@@ -46,5 +47,5 @@ func main() {
 
 	fmt.Printf("Hotels API listening requests on port: %s\n", cfg.HTTP_PORT)
 
-	log.Fatal(http.ListenAndServe(":"+cfg.HTTP_PORT, mid.Limit(mux)))
+	log.Fatal(http.ListenAndServe(":"+cfg.HTTP_PORT, mid.Limit(brotlihandler.CompressHandler(mux))))
 }
