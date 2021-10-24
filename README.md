@@ -20,7 +20,7 @@ Simple API with one json custom data file.
 
 💵 - in-memory cache
 
-🗜️ - gzip and brotli compression (more then body length 1400 bytes)
+🗜️ - gzip or brotli compression (more then body length 1400 bytes)
 
 ## Setup enviroments
 
