@@ -20,6 +20,8 @@ Simple API with one json custom data file.
 
 💵 - in-memory cache
 
+🗜️ - gzip or brotli compression (more then body length 1400 bytes)
+
 ## Setup enviroments
 
 - Create .env file at your root project folder and fill it with your data (see .env.example to reference)
