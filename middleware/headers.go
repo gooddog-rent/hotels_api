@@ -19,8 +19,8 @@ func (c Cache) CustomHeaders(next http.HandlerFunc) http.HandlerFunc {
 		}
 
 		// CORS headers
-		w.Header().Set("Access-Control-Allow-Origin", "*") // change to host domain for private
-		w.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
+		// w.Header().Set("Access-Control-Allow-Origin", "*") // change to host domain for private
+		// w.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
 		// w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 
 		// JSON and Cache headers
