@@ -35,7 +35,7 @@ func main() {
 
 	l := api.Locations{}
 
-	// parse json
+	// parse hotels json file
 	go io.ParseJSON(ch, &l)
 
 	// init cache storage
