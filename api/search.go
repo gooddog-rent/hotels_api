@@ -4,6 +4,9 @@ import (
 	"strings"
 
 	"hotels_api/suffixtree"
+
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 // Location struct store Region and slice of hotels
@@ -15,7 +18,7 @@ type Location struct {
 // Locations struct store slice of Locations and Counter struct
 type Locations struct {
 	Locations  []Location `json:"locations"`
-	Tree       *suffixtree.GeneralizedSuffixTree
+	Tree       *suffixtree.SuffixTree
 	HotelsList []string
 	Result     []string
 }
@@ -58,7 +61,7 @@ func (l *Locations) SearchInSuffixTree(text string, limit int) FilteredHotels {
 
 	for _, index := range indexes {
 
-		regionAndHotel := strings.Split(strings.Title(l.HotelsList[index]), ";")
+		regionAndHotel := strings.Split(cases.Title(language.Und, cases.NoLower).String(l.HotelsList[index]), ";")
 		region := regionAndHotel[0]
 		hotel := regionAndHotel[1]
 

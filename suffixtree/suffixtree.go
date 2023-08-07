@@ -16,14 +16,18 @@ import (
 	"unicode/utf8"
 )
 
-type GeneralizedSuffixTree struct {
+type SuffixTree struct {
+	generalizedSuffixTree
+}
+
+type generalizedSuffixTree struct {
 	root       *node //The root of the suffix tree
 	activeLeaf *node //The last leaf that was added during the update operation
 }
 
 // Search search for the given word within the GST and returns at most the given number of matches.
 // numElments <= 0 get all matches
-func (t *GeneralizedSuffixTree) Search(word string, numElements int) []int {
+func (t *generalizedSuffixTree) Search(word string, numElements int) []int {
 	node := t.searchNode(word)
 	if node == nil {
 		return nil
@@ -32,7 +36,7 @@ func (t *GeneralizedSuffixTree) Search(word string, numElements int) []int {
 }
 
 // searchNode returns the tree node (if present) that corresponds to the given string.
-func (t *GeneralizedSuffixTree) searchNode(word string) *node {
+func (t *generalizedSuffixTree) searchNode(word string) *node {
 	/*
 	 * Verifies if exists a path from the root to a node such that the concatenation
 	 * of all the labels on the path is a superstring of the given word.
@@ -73,7 +77,7 @@ func (t *GeneralizedSuffixTree) searchNode(word string) *node {
 }
 
 // Put adds the specified index to the GST under the given key.
-func (t *GeneralizedSuffixTree) Put(key string, index int) {
+func (t *generalizedSuffixTree) Put(key string, index int) {
 	// reset activeLeaf
 	t.activeLeaf = t.root
 	s := t.root
@@ -114,7 +118,7 @@ func (t *GeneralizedSuffixTree) Put(key string, index int) {
  * @param rest the rest of the string
  * @param value the value to add to the index
  */
-func (t *GeneralizedSuffixTree) update(inputNode *node, stringPart []rune, rest []rune, value int) (s *node, runes []rune) {
+func (t *generalizedSuffixTree) update(inputNode *node, stringPart []rune, rest []rune, value int) (s *node, runes []rune) {
 	s = inputNode
 	runes = stringPart
 	newRune := stringPart[len(stringPart)-1]
@@ -185,7 +189,7 @@ func (t *GeneralizedSuffixTree) update(inputNode *node, stringPart []rune, rest 
  * a prefix of inputstr and remainder will be string that must be
  * appended to the concatenation of labels from s to n to get inpustr.
  */
-func (t *GeneralizedSuffixTree) canonize(s *node, runes []rune) (*node, []rune) {
+func (t *generalizedSuffixTree) canonize(s *node, runes []rune) (*node, []rune) {
 
 	currentNode := s
 	if len(runes) > 0 {
@@ -222,7 +226,7 @@ func (t *GeneralizedSuffixTree) canonize(s *node, runes []rune) (*node, []rune) 
  *                  the last node that can be reached by following the path denoted by stringPart starting from inputs
  *
  */
-func (t *GeneralizedSuffixTree) testAndSplit(inputs *node, stringPart []rune, r rune, remainder []rune, value int) (bool, *node) {
+func (t *generalizedSuffixTree) testAndSplit(inputs *node, stringPart []rune, r rune, remainder []rune, value int) (bool, *node) {
 	// descend the tree as far as possible
 	s, str := t.canonize(inputs, stringPart)
 
@@ -286,8 +290,8 @@ func safeCutLastChar(runes []rune) []rune {
 	return runes[:len(runes)-1]
 }
 
-func NewGeneralizedSuffixTree() *GeneralizedSuffixTree {
-	t := &GeneralizedSuffixTree{}
+func NewGeneralizedSuffixTree() *SuffixTree {
+	t := &SuffixTree{}
 	t.root = newNode()
 	t.activeLeaf = t.root
 	return t
