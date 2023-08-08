@@ -3,7 +3,6 @@ package io
 import (
 	"encoding/json"
 	"hotels_api/api"
-	"io/ioutil"
 	"log"
 	"os"
 	"time"
@@ -35,7 +34,7 @@ func watchFile(filepath string, updatetime time.Duration) error {
 // and check json is valid then send updateed data into channel
 func UpdateHotels(ch chan []byte, filepath string) {
 	for {
-		h, err := ioutil.ReadFile(filepath)
+		h, err := os.ReadFile(filepath)
 		if err != nil {
 			log.Fatal(err)
 		}

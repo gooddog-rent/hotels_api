@@ -1,28 +1,37 @@
 package io
 
 import (
-	"io/ioutil"
 	"os"
 	"testing"
 	"time"
 )
 
-func TestWatchFileValidChange(t *testing.T) {
+const (
+	TEMP_DIR     = "./"
+	TEMP_FILE    = "temp.*.json"
+	TEST_PATTERN = "test"
+)
 
-	tempdir := "./"
-	tempfile := "temp.*.json"
+func createTempFolderAndFile(t *testing.T) *os.File {
 
-	dirname, err := ioutil.TempDir(tempdir, "test")
+	dirname, err := os.MkdirTemp(TEMP_DIR, TEST_PATTERN)
 	if err != nil {
 		t.Error(err)
 	}
 	defer os.RemoveAll(dirname)
 
-	f, err := ioutil.TempFile(dirname, tempfile)
+	f, err := os.CreateTemp(dirname, TEMP_FILE)
 	if err != nil {
 		t.Error(err)
 	}
 	defer os.Remove(f.Name())
+
+	return f
+}
+
+func TestWatchFileValidChange(t *testing.T) {
+
+	f := createTempFolderAndFile(t)
 
 	done := make(chan struct{}, 2)
 
@@ -47,26 +56,11 @@ func TestWatchFileValidChange(t *testing.T) {
 
 	<-done
 	<-done
-
-	// f.WriteString(`{"locations":[{"region":"Bavaro","hotels":["Airbnb Apartments","Catalonia Bavaro"]}]}`)
 }
 
 func TestWatchFileWrongFile(t *testing.T) {
 
-	tempdir := "./"
-	tempfile := "temp.*.json"
-
-	dirname, err := ioutil.TempDir(tempdir, "test")
-	if err != nil {
-		t.Error(err)
-	}
-	defer os.RemoveAll(dirname)
-
-	f, err := ioutil.TempFile(dirname, tempfile)
-	if err != nil {
-		t.Error(err)
-	}
-	defer os.Remove(f.Name())
+	_ = createTempFolderAndFile(t)
 
 	ok := watchFile("", 0)
 	if ok == nil {
