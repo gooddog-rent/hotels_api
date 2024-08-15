@@ -7,17 +7,17 @@ jobs:
   tests:
     strategy:
       matrix:
-        go-version: [1.14.x, 1.15.x, 1.16.x, 1.17.x, 1.18.x]
+        go-version: [1.18.x, 1.19.x, 1.20.x, 1.21.x]
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Install Go
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@v4
         with:
           go-version: ${{ matrix.go-version }}
 
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup environments
         env:
@@ -27,6 +27,9 @@ jobs:
           echo "HTTP_PORT=$HTTP_PORT" >> .env
           echo "HOTELS_PATH=$HOTELS_PATH" >> .env
 
+      - name: Check go mod
+        run: go mod tidy
+
       - name: Run tests and show coverage
         run: go test -race -v -cover ./...
 
@@ -35,7 +38,7 @@ jobs:
     needs: tests
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
