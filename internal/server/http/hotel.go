@@ -1,19 +1,20 @@
-package location
+package http
 
 import (
 	"encoding/json"
+	"hotels_api/internal/service"
 	"log"
 	"net/http"
 	"net/url"
 	"strconv"
 )
 
-type LocationService struct {
-	HotelRepository
+type hotelRoutes struct {
+	hotelService service.Hotel
 }
 
 // GetHotels method handle requests and response with filtered hotels
-func (l *LocationService) GetHotels(w http.ResponseWriter, req *http.Request) {
+func (h *hotelRoutes) getHotels(w http.ResponseWriter, req *http.Request) {
 
 	// all request validations are located in separate validateRequest middleware
 	// parse encoded query params to map
@@ -25,7 +26,7 @@ func (l *LocationService) GetHotels(w http.ResponseWriter, req *http.Request) {
 	// convert limit value to string
 	limit, _ := strconv.Atoi(params.Get("limit"))
 
-	filtered := l.Search(text, limit)
+	filtered := h.hotelService.SearchHotels(text, limit)
 
 	out, err := json.Marshal(filtered)
 	if err != nil {
@@ -34,5 +35,8 @@ func (l *LocationService) GetHotels(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	w.Write(out)
+	_, err = w.Write(out)
+	if err != nil {
+		log.Println("Response result write error!", err)
+	}
 }

@@ -7,9 +7,10 @@
 # compiled local binary file
 hotels_api*
 hotels_api*.exe
+app.exe
 
 # hotels list
 /hotels
 
-# test and temp directories and files
-/io/test*
+# test temp directory and files
+/test/temp/

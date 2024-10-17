@@ -1,7 +1,11 @@
-package location
+package http
 
 import (
+	"context"
 	"encoding/json"
+	"hotels_api/internal/infra"
+	"hotels_api/internal/service"
+	"hotels_api/pkg/suffixtree"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -11,16 +15,26 @@ const URL = "http://localhost:4000/hotels"
 
 func TestReponseOK(t *testing.T) {
 
-	l := LocationService{}
+	// TODO: mock
+	tree := suffixtree.NewGeneralizedSuffixTree()
+
+	repositories := infra.NewRepositories(tree, "")
+
+	deps := service.ServicesDependencies{
+		Repos: repositories,
+	}
+
+	services := service.NewServices(deps)
+
+	h := &hotelRoutes{
+		hotelService: services.Hotel,
+	}
 
 	query := "?query=bav&limit=4"
-	req := httptest.NewRequest(http.MethodGet, URL+query, nil)
+	req := httptest.NewRequestWithContext(context.Background(), http.MethodGet, URL+query, nil)
 	rr := httptest.NewRecorder()
 
-	// build suffix search tree
-	l.Build()
-
-	l.GetHotels(rr, req)
+	h.getHotels(rr, req)
 
 	resp := rr.Result()
 
@@ -35,7 +49,7 @@ func TestInvalidParseJson(t *testing.T) {
 	req := httptest.NewRequest(http.MethodGet, URL+query, nil)
 	rr := httptest.NewRecorder()
 
-	getHotelsHandler := func(w http.ResponseWriter, req *http.Request) {
+	getHotelsHandler := func(_ http.ResponseWriter, req *http.Request) {
 
 		x := map[string]interface{}{
 			"foo": make(chan int),
@@ -53,6 +67,7 @@ func TestInvalidParseJson(t *testing.T) {
 	handler(rr, req)
 
 	resp := rr.Result()
+	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusInternalServerError || req.Method != http.MethodGet {
 		t.Errorf("Bad response status code! Excpect: %d Have: %d", http.StatusInternalServerError, resp.StatusCode)

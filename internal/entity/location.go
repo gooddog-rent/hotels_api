@@ -1,19 +1,14 @@
-package domain
+package entity
 
-import "hotels_api/pkg/suffixtree"
-
-// Location struct store Region and slice of hotels
+// Location struct store Region and list of hotels
 type Location struct {
 	Region string   `json:"region"`
 	Hotels []string `json:"hotels"`
 }
 
 // Locations struct store slice of Locations struct
-type Locations struct {
-	Locations  []Location `json:"locations"`
-	Tree       *suffixtree.SuffixTree
-	HotelsList []string
-	Result     []string
+type LocationsStore struct {
+	Locations []Location `json:"locations"`
 }
 
 // ResponseHotels struct store output response hotels data

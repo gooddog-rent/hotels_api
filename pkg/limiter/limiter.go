@@ -10,6 +10,12 @@ import (
 	"golang.org/x/time/rate"
 )
 
+// Run a background goroutine to remove old entries from the visitors map.
+func init() {
+	timeout := 3 * time.Minute
+	go cleanupVisitors(timeout)
+}
+
 // Create a custom visitor struct which holds the rate limiter for each
 // visitor and the last time that the visitor was seen.
 type visitor struct {
@@ -21,11 +27,6 @@ type visitor struct {
 var visitors = make(map[string]*visitor)
 var mu sync.Mutex
 
-// Run a background goroutine to remove old entries from the visitors map.
-func init() {
-	go cleanupVisitors()
-}
-
 func getVisitor(ip string) *rate.Limiter {
 	mu.Lock()
 	defer mu.Unlock()
@@ -33,8 +34,11 @@ func getVisitor(ip string) *rate.Limiter {
 	v, exists := visitors[ip]
 	if !exists {
 
+		requestsPerSecond := rate.Limit(2)
+		maxRequests := 5
+
 		// Allow 2 requests per second, with a maximum of 5 requests in a burst
-		limiter := rate.NewLimiter(2, 5)
+		limiter := rate.NewLimiter(requestsPerSecond, maxRequests)
 
 		// Include the current time when creating a new visitor.
 		visitors[ip] = &visitor{limiter, time.Now()}
@@ -48,13 +52,13 @@ func getVisitor(ip string) *rate.Limiter {
 
 // Every minute check the map for visitors that haven't been seen for
 // more than 3 minutes and delete the entries.
-func cleanupVisitors() {
+func cleanupVisitors(timeout time.Duration) {
 	for {
 		time.Sleep(time.Minute)
 
 		mu.Lock()
 		for ip, v := range visitors {
-			if time.Since(v.lastSeen) > 3*time.Minute {
+			if time.Since(v.lastSeen) > timeout {
 				delete(visitors, ip)
 			}
 		}

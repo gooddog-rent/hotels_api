@@ -1,4 +1,4 @@
-package watcher
+package treedb
 
 import (
 	"os"
@@ -7,9 +7,9 @@ import (
 )
 
 const (
-	TEMP_DIR     = "./"
+	TEMP_DIR     = "../../../test/temp/"
 	TEMP_FILE    = "temp.*.json"
-	TEST_PATTERN = "test"
+	TEST_PATTERN = "test_watcher_service_"
 )
 
 func createTempFolderAndFile(t *testing.T) *os.File {
@@ -35,16 +35,16 @@ func TestWatchFileValidChange(t *testing.T) {
 
 	done := make(chan struct{}, 2)
 
-	f.WriteString("some new data in json file")
+	_, _ = f.WriteString("some new data in json file")
 
-	w := Watch{
-		Filepath:   f.Name(),
-		UpdateTime: 150 * time.Millisecond,
+	w := WatcherRepo{
+		filepath:   f.Name(),
+		updateTime: 150 * time.Millisecond,
 	}
 
 	go func() {
 
-		ok := w.watchFile()
+		ok := w.WatchFile()
 		if ok != nil {
 			t.Errorf("Invalid file change. Should be nil return. Error: %v\n", ok)
 		}
@@ -55,7 +55,7 @@ func TestWatchFileValidChange(t *testing.T) {
 	go func() {
 
 		// write to new temp file some data
-		f.Truncate(5)
+		_ = f.Truncate(5)
 		done <- struct{}{}
 	}()
 
@@ -67,12 +67,12 @@ func TestWatchFileWrongFile(t *testing.T) {
 
 	_ = createTempFolderAndFile(t)
 
-	w := Watch{
-		Filepath:   "",
-		UpdateTime: 0,
+	w := WatcherRepo{
+		filepath:   "",
+		updateTime: 0,
 	}
 
-	ok := w.watchFile()
+	ok := w.WatchFile()
 	if ok == nil {
 		t.Errorf("Invalid file. Error: %v\n", ok)
 	}

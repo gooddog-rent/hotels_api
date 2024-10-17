@@ -7,8 +7,8 @@ import (
 	"time"
 )
 
-// CustomHeaders middleware handler setup CORS and other headers
-func (c Cache) CacheHeaders(next http.HandlerFunc) http.HandlerFunc {
+// CacheHeaders middleware handler setup Cache-Control header
+func (c Cache) CacheHeaders(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 
 		duration, err := time.ParseDuration(c.duration)

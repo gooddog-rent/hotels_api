@@ -10,7 +10,7 @@ import (
 )
 
 // Log middleware handler shows network data log info
-func Log(next http.HandlerFunc) http.HandlerFunc {
+func Log(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		t := time.Now()
 

@@ -17,7 +17,7 @@ func TestReponseOK(t *testing.T) {
 	req := httptest.NewRequest(http.MethodGet, URL+query, nil)
 	rr := httptest.NewRecorder()
 
-	validateRequestHandler := func(w http.ResponseWriter, req *http.Request) {
+	validateRequestHandler := func(_ http.ResponseWriter, req *http.Request) {
 
 		// check on correct request method
 		if req.Method != http.MethodGet {
@@ -61,9 +61,10 @@ func TestReponseOK(t *testing.T) {
 	}
 
 	handler := ValidateRequest(http.HandlerFunc(validateRequestHandler))
-	handler(rr, req)
+	handler.ServeHTTP(rr, req)
 
 	resp := rr.Result()
+	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK || req.Method != http.MethodGet {
 		t.Errorf("Bad response status code! Excpect: %d Have: %d", http.StatusOK, resp.StatusCode)
@@ -76,7 +77,7 @@ func TestReponseBadRequest(t *testing.T) {
 	req := httptest.NewRequest(http.MethodGet, URL+query, nil)
 	rr := httptest.NewRecorder()
 
-	validateRequestHandler := func(w http.ResponseWriter, req *http.Request) {
+	validateRequestHandler := func(_ http.ResponseWriter, req *http.Request) {
 
 		// parse encoded query params to map
 		params, _ := url.ParseQuery(req.URL.Query().Encode())
@@ -89,9 +90,10 @@ func TestReponseBadRequest(t *testing.T) {
 	}
 
 	handler := ValidateRequest(http.HandlerFunc(validateRequestHandler))
-	handler(rr, req)
+	handler.ServeHTTP(rr, req)
 
 	resp := rr.Result()
+	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusBadRequest || req.Method != http.MethodGet {
 		t.Errorf("Bad response status code! Excpect: %d Have: %d", http.StatusBadRequest, resp.StatusCode)
@@ -104,7 +106,7 @@ func TestBadMethod(t *testing.T) {
 	req := httptest.NewRequest(http.MethodPost, URL+query, nil)
 	rr := httptest.NewRecorder()
 
-	validateRequestHandler := func(w http.ResponseWriter, req *http.Request) {
+	validateRequestHandler := func(_ http.ResponseWriter, req *http.Request) {
 
 		// check on correct request method
 		if req.Method != http.MethodGet {
@@ -114,9 +116,10 @@ func TestBadMethod(t *testing.T) {
 	}
 
 	handler := ValidateRequest(http.HandlerFunc(validateRequestHandler))
-	handler(rr, req)
+	handler.ServeHTTP(rr, req)
 
 	resp := rr.Result()
+	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusMethodNotAllowed || req.Method != http.MethodPost {
 		t.Errorf("Bad response status code! Excpect: %d Have: %d", http.StatusBadRequest, resp.StatusCode)
@@ -129,7 +132,7 @@ func TestInvalidQuery(t *testing.T) {
 	req := httptest.NewRequest(http.MethodGet, URL+query, nil)
 	rr := httptest.NewRecorder()
 
-	validateRequestHandler := func(w http.ResponseWriter, req *http.Request) {
+	validateRequestHandler := func(_ http.ResponseWriter, req *http.Request) {
 
 		// parse encoded query params to map
 		_, err := url.ParseQuery(req.URL.Query().Encode())
@@ -140,9 +143,10 @@ func TestInvalidQuery(t *testing.T) {
 	}
 
 	handler := ValidateRequest(http.HandlerFunc(validateRequestHandler))
-	handler(rr, req)
+	handler.ServeHTTP(rr, req)
 
 	resp := rr.Result()
+	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusBadRequest {
 		t.Errorf("Bad response status code! Excpect: %d Have: %d", http.StatusBadRequest, resp.StatusCode)
@@ -155,7 +159,7 @@ func TestInvalidLimit(t *testing.T) {
 	req := httptest.NewRequest(http.MethodGet, URL+query, nil)
 	rr := httptest.NewRecorder()
 
-	validateRequestHandler := func(w http.ResponseWriter, req *http.Request) {
+	validateRequestHandler := func(_ http.ResponseWriter, req *http.Request) {
 
 		// parse encoded query params to map
 		params, _ := url.ParseQuery(req.URL.Query().Encode())
@@ -168,9 +172,10 @@ func TestInvalidLimit(t *testing.T) {
 	}
 
 	handler := ValidateRequest(http.HandlerFunc(validateRequestHandler))
-	handler(rr, req)
+	handler.ServeHTTP(rr, req)
 
 	resp := rr.Result()
+	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusBadRequest {
 		t.Errorf("Bad response status code! Excpect: %d Have: %d", http.StatusBadRequest, resp.StatusCode)
@@ -183,7 +188,7 @@ func TestLimitQueryNotNumber(t *testing.T) {
 	req := httptest.NewRequest(http.MethodGet, URL+query, nil)
 	rr := httptest.NewRecorder()
 
-	validateRequestHandler := func(w http.ResponseWriter, req *http.Request) {
+	validateRequestHandler := func(_ http.ResponseWriter, req *http.Request) {
 
 		// parse encoded query params to map
 		params, _ := url.ParseQuery(req.URL.Query().Encode())
@@ -197,9 +202,10 @@ func TestLimitQueryNotNumber(t *testing.T) {
 	}
 
 	handler := ValidateRequest(http.HandlerFunc(validateRequestHandler))
-	handler(rr, req)
+	handler.ServeHTTP(rr, req)
 
 	resp := rr.Result()
+	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusBadRequest {
 		t.Errorf("Bad response status code! Excpect: %d Have: %d", http.StatusBadRequest, resp.StatusCode)

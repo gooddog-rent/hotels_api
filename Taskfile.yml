@@ -1,0 +1,96 @@
+version: '3'
+
+# Global environment variables
+env:
+
+  # Go parameters
+  GOARCH: amd64
+  GOBUILD: go build
+  GOCLEAN: go clean
+  GOTEST: go test
+  GOTOOL: go tool
+  GOGET: go get
+  GOMOD: go mod
+  GOINST: go install
+  # PLATFORMS: ["darwin", "linux", "windows"]
+  PLATFORM: windows.exe
+
+  MODULE_NAME: hotels_api
+
+  # Binary name
+  BINARY_NAME: hotels_api
+
+  # App entrypoint path
+  APP_ENTRYPOINT: ./cmd/app
+
+# Global variables
+# vars:
+#   PLATFORMS: ["darwin", "linux", "windows.exe"]
+
+tasks:
+  
+  # Debug
+  debug:
+    cmds:
+      - echo "⚙️ Debug info"
+      - if [ $(go env GOOS) == "windows" ]; then echo "Windows OK!"; fi
+
+  # Build app
+  build:
+    silent: true
+    cmds:
+      - $GOBUILD -o ${BINARY_NAME}_${PLATFORM} $APP_ENTRYPOINT
+      - echo "📦 Build Done"
+
+  # Build app for all platforms
+  build-all:
+    cmds:
+      - for: ["darwin", "linux", "windows.exe"]
+        cmd: $GOBUILD -o ${BINARY_NAME}_{{ .ITEM }} $APP_ENTRYPOINT
+      - echo "📦 Builds Done"
+
+  # Build and run
+  run:
+    silent: true
+    deps: [build]
+    cmds:
+      - echo "🚀 Running App"
+      - ./${BINARY_NAME}_${PLATFORM}
+
+  # Build Docker Image
+  build:docker:
+    silent: true
+    cmds:
+      - echo "📦 Build & Tag Docker Image"
+      - docker build -t hotels_api_local ./deployments/. #TODO:
+      - docker tag hotels_api_local:latest hotels_api_local:staging
+      - docker-compose -f ./deployments/docker-compose.yml up -d
+
+  # Run in docker
+  run:docker:
+    silent: true
+    deps: [build:docker]
+    cmds:
+      - echo "🚀 Running App in Docker"
+      - docker-compose -f ./deployments/docker-compose.yml up -d
+
+  # Clean app binaries
+  clean:
+    cmds:
+      - echo "🧹 Clean App Binaries"
+      - for: ["darwin", "linux", "windows"]
+        cmd: if [ $(go env GOOS) == {{ .ITEM }} ]; then rm ${BINARY_NAME}_${PLATFORM}; fi 
+
+  # Run unit tests
+  test:
+    silent: true
+    cmds:
+      - echo "🧪 Running Unit Tests" 
+      - go test -v -cover ./...
+
+  # Lint
+  lint:
+    silent: true
+    cmds:
+      - echo "🔦 Running Code Linter"
+      - golangci-lint run

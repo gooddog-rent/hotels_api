@@ -5,7 +5,7 @@ import (
 )
 
 // CustomHeaders middleware handler setup CORS and other headers
-func CORSHeaders(next http.HandlerFunc) http.HandlerFunc {
+func CORSHeaders(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 
 		// CORS headers

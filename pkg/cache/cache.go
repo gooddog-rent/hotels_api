@@ -1,12 +1,12 @@
 package cache
 
 import (
-	"log"
-	"net/http"
-	"net/http/httptest"
 	"sync"
 	"time"
 )
+
+// static interface implementation check for convinience
+var _ Storage = new(Cache)
 
 var CacheStore Storage
 
@@ -29,15 +29,6 @@ type Cache struct {
 	items    map[string]Item
 	mu       *sync.RWMutex
 	duration string
-}
-
-// NewCache creates a new in memory Cache
-func NewCache() *Cache {
-	return &Cache{
-		items:    make(map[string]Item),
-		mu:       &sync.RWMutex{},
-		duration: "5m",
-	}
 }
 
 // Get a cached content by key
@@ -64,37 +55,11 @@ func (c Cache) Set(key string, content []byte, duration time.Duration) {
 	}
 }
 
-// CacheResponse middleware
-func (c *Cache) CacheResponse(next http.HandlerFunc) http.HandlerFunc {
-	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
-
-		content := CacheStore.Get(req.RequestURI)
-		if content != nil {
-			// log.Println("Cached response.")
-			w.Write(content)
-		} else {
-			rr := httptest.NewRecorder()
-
-			//TODO: fix to dublicate here from customHeaders middleware
-			// rr.Header().Set("Content-Type", "application/json")
-
-			next(rr, req)
-
-			for k, v := range rr.Header() {
-				w.Header()[k] = v
-			}
-
-			w.WriteHeader(rr.Code)
-			content := rr.Body.Bytes()
-
-			if d, err := time.ParseDuration(c.duration); err == nil {
-
-				// log.Printf("New page cached: %s for %s\n", req.RequestURI, c.duration)
-				CacheStore.Set(req.RequestURI, content, d)
-			} else {
-				log.Printf("Page not cached. err: %s\n", err)
-			}
-			w.Write(content)
-		}
-	})
+// NewCache creates a new in memory Cache
+func NewCache() *Cache {
+	return &Cache{
+		items:    make(map[string]Item),
+		mu:       &sync.RWMutex{},
+		duration: "2m",
+	}
 }

@@ -1,4 +1,4 @@
-## 🏨 Starightforward hotels list API with one route.
+# 🏨 Starightforward hotels list API with one route
 
 ---
 
@@ -24,7 +24,7 @@ Simple API with one json custom data file.
 
 ## Setup enviroments
 
-- Create .env file at your root project folder and fill it with your data (see .env.example to reference)
+- Create `.env` file at your root project folder and fill it with your data (see `.env.example` to reference)
 
 ### Run in Docker container via docker compose (example)
 
@@ -64,6 +64,7 @@ Returns json data with list of region and hotels.
 
   - **Code:** 200 <br />
     **Content:**
+
     ```json
     {
       "hotels": {
@@ -106,5 +107,5 @@ Returns json data with list of region and hotels.
 - **Sample Call:**
 
   ```shell
-  curl "https://gooddog.rent/hotels?query=resort&limit=10"
+  curl "http://localhost:4000/hotels?query=resort&limit=10"
   ```

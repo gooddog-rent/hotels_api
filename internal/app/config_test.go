@@ -1,25 +1,27 @@
 package app
 
 import (
-	"fmt"
 	"os"
 	"testing"
-
-	"github.com/joho/godotenv"
 )
 
-func init() {
+// declare cfg as global variable
+var cfg *Config
 
-	// load .env.test file
-	err := godotenv.Load("../test.env")
-	if err != nil {
-		fmt.Print("Error loading test.env file. Env variables should be loaded.")
-	}
+// Good alternative for init() function
+func TestMain(m *testing.M) {
+
+	// init .env config
+	InitEnv("../../.env.test")
+
+	// init config environments
+	cfg = NewConfig()
+
+	// run tests
+	os.Exit(m.Run())
 }
 
 func TestNewConfigNotEmptyData(t *testing.T) {
-
-	cfg := NewConfig()
 
 	if cfg.HTTP_PORT == "" || cfg.HOTELS_PATH == "" {
 		t.Errorf("Config struct should not have an empty values: got %v", cfg)
@@ -41,9 +43,7 @@ func TestNewConfigEmptyData(t *testing.T) {
 		os.Setenv(env, "")
 	}
 
-	cfg := NewConfig()
-
-	if cfg.HTTP_PORT != "" || cfg.HOTELS_PATH != "" {
+	if os.Getenv(cfg.HTTP_PORT) != "" || os.Getenv(cfg.HOTELS_PATH) != "" {
 		t.Errorf("Config struct should be an empty values: got %v", cfg)
 	}
 

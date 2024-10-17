@@ -1,11 +1,10 @@
-version: "3"
 services:
   hotels-api:
     image: iqhater/hotels_api:latest
     container_name: hotels-api
     env_file:
-      - ./.env
+      - ../.env
     volumes:
-      - ./hotels:/hotels
+      - ../hotels:/hotels
     ports:
       - "4000:4000"
