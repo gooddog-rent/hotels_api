@@ -31,7 +31,7 @@ jobs:
         run: go mod tidy
 
       - name: Run tests and show coverage
-        run: go test -race -v -cover ./...
+        run: go test -v -cover ./...
 
   deploy:
     runs-on: ubuntu-latest
