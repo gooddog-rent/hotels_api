@@ -31,15 +31,11 @@ type FileWatcher interface {
 }
 
 type Repositories struct {
-	// Tree
 	Hotel
-	// FileWatcher
 }
 
 func NewRepositories(tree *suffixtree.SuffixTree, HOTELS_PATH string) *Repositories {
 	return &Repositories{
-		// Tree:        treedb.NewTreeRepo(tree),
 		Hotel: treedb.NewWatcherRepo(tree, HOTELS_PATH, 15*time.Second),
-		// FileWatcher: treedb.NewWatcherRepo(tree, HOTELS_PATH, 15*time.Second),
 	}
 }

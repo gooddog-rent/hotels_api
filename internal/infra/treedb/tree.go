@@ -7,22 +7,10 @@ import (
 	"sync"
 )
 
-// static interface implementation check for convinience
-// var _ infra.Tree = (*TreeRepo)(nil)
-
 type TreeRepo struct {
 	searchTree *entity.SearchTree
 	mu         sync.Mutex
 }
-
-/* func NewTreeRepo(tree *suffixtree.SuffixTree) *TreeRepo {
-	return &TreeRepo{
-		searchTree: &entity.SearchTree{
-			Tree:       tree,
-			HotelsList: []string{},
-		},
-	}
-} */
 
 // BuildTree method create a new search tree with regions and hotels
 func (t *TreeRepo) BuildTree(l *entity.LocationsStore) *entity.SearchTree {

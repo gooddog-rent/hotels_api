@@ -37,6 +37,7 @@ func TestReponseOK(t *testing.T) {
 	h.getHotels(rr, req)
 
 	resp := rr.Result()
+	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK || req.Method != http.MethodGet {
 		t.Errorf("Bad response status code! Excpect: %d Have: %d", http.StatusOK, resp.StatusCode)

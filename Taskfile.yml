@@ -29,7 +29,7 @@ env:
 
 tasks:
   
-  # Debug
+  # Debug for test Taskfile output
   debug:
     cmds:
       - echo "⚙️ Debug info"
@@ -87,6 +87,9 @@ tasks:
     cmds:
       - echo "🧪 Running Unit Tests" 
       - go test -v -cover ./...
+      
+      # clear temp test files. comment if you want to keep them
+      - rm -rf ./test/temp/**
 
   # Lint
   lint:

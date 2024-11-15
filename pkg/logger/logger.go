@@ -23,7 +23,7 @@ func Log(next http.Handler) http.Handler {
 
 		layout := "02.01.2006 15:04:05"
 
-		fmt.Fprintf(tw, "%v\t [%d: %s]\t %v\t %s\t %s\t %s\n", t.Format(layout), statusCode, http.StatusText(statusCode), time.Since(t), req.RemoteAddr, req.Method, req.URL.String())
+		fmt.Fprintf(tw, "Date: %v\t Response status: [%d: %s]\t Response time: %v\t Remote IP: %s\t Request method: %s\t Endpoint: %s\n", t.Format(layout), statusCode, http.StatusText(statusCode), time.Since(t), req.RemoteAddr, req.Method, req.URL.String())
 		tw.Flush()
 	})
 }

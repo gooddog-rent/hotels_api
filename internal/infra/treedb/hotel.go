@@ -8,19 +8,6 @@ import (
 	"golang.org/x/text/language"
 )
 
-// static interface implementation check for convinience
-// var _ infra.Hotel = (*HotelRepo)(nil)
-
-/* type HotelRepo struct {
-	db *WatcherRepo
-} */
-
-/* func NewHotelRepo(tree *suffixtree.SuffixTree, HOTELS_PATH string, updateTime time.Duration) *HotelRepo {
-	return &HotelRepo{
-		db: NewWatcherRepo(tree, HOTELS_PATH, updateTime),
-	}
-} */
-
 // Search method returns filtered request with hotels
 func (h *WatcherRepo) SearchHotels(text string, limit int) *entity.ResponseHotels {
 
@@ -31,10 +18,6 @@ func (h *WatcherRepo) SearchHotels(text string, limit int) *entity.ResponseHotel
 	h.mu.RLock()
 	indexes := h.tree.searchTree.Tree.Search(strings.ToLower(text), -1)
 	h.mu.RUnlock()
-
-	// log.Println("Search Indexes...", indexes)
-	// log.Println("Hotels list...", h.tree.searchTree.HotelsList)
-	// log.Println("LOG: ", h.filepath)
 
 	for _, index := range indexes {
 
