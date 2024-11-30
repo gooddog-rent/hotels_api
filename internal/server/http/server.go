@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"hotels_api/internal/entity"
 	"hotels_api/internal/infra"
-	"hotels_api/internal/server/http/validator"
+
 	"hotels_api/internal/service"
 	"hotels_api/pkg/cache"
 	"hotels_api/pkg/headers/content"
@@ -65,7 +65,7 @@ func RunServer(HTTP_PORT, HOTELS_PATH string) {
 		content.ContentTypeHeaders,
 		cors.CORSHeaders,
 		secure.SecureHeaders,
-		validator.ValidateRequest,
+		ValidateRequest,
 		c.CacheResponse,
 	)
 

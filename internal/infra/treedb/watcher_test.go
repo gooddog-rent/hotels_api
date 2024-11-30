@@ -2,6 +2,7 @@ package treedb
 
 import (
 	"os"
+	"path/filepath"
 	"testing"
 	"time"
 )
@@ -14,7 +15,12 @@ const (
 
 func createTempFolderAndFile(t *testing.T) *os.File {
 
-	dirname, err := os.MkdirTemp(TEMP_DIR, TEST_PATTERN)
+	tempDir, err := filepath.Abs(TEMP_DIR)
+	if err != nil {
+		t.Error(err)
+	}
+
+	dirname, err := os.MkdirTemp(tempDir, TEST_PATTERN)
 	if err != nil {
 		t.Error(err)
 	}

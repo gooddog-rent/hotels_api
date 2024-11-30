@@ -1,6 +1,7 @@
-package validator
+package http
 
 import (
+	"context"
 	"log"
 	"net/http"
 	"net/url"
@@ -25,32 +26,36 @@ func ValidateRequest(next http.Handler) http.Handler {
 		}
 
 		// check if "query" word is exists
-		if _, ok := params["query"]; !ok {
+		if _, ok := params[string(contextQueryKey)]; !ok {
 			http.Error(w, "'query' parameter does not exist or bad value!", http.StatusBadRequest)
 			return
 		}
 
 		// check if "limit" word is exists
-		if _, ok := params["limit"]; !ok {
+		if _, ok := params[string(contextLimitKey)]; !ok {
 			http.Error(w, "'limit' parameter does not exist or bad value!", http.StatusBadRequest)
 			return
 		}
 
 		// parse search query
-		text := params.Get("query")
+		text := params.Get(string(contextQueryKey))
 		if text == "" {
 			http.Error(w, "'query' value is empty!", http.StatusBadRequest)
 			return
 		}
 
 		// convert limit value to string
-		_, err = strconv.Atoi(params.Get("limit"))
+		limit, err := strconv.Atoi(params.Get(string(contextLimitKey)))
 		if err != nil {
 			log.Println(err)
 			http.Error(w, "'limit' value must be integer!", http.StatusBadRequest)
 			return
 		}
 
-		next.ServeHTTP(w, req)
+		// add valid query and limit values to context
+		ctx := context.WithValue(req.Context(), contextQueryKey, text)
+		ctx = context.WithValue(ctx, contextLimitKey, limit)
+
+		next.ServeHTTP(w, req.WithContext(ctx))
 	})
 }

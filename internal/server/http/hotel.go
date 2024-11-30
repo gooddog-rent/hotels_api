@@ -5,9 +5,12 @@ import (
 	"hotels_api/internal/service"
 	"log"
 	"net/http"
-	"net/url"
-	"strconv"
 )
+
+type contextKey string
+
+const contextQueryKey contextKey = "query"
+const contextLimitKey contextKey = "limit"
 
 type hotelRoutes struct {
 	hotelService service.Hotel
@@ -17,14 +20,9 @@ type hotelRoutes struct {
 func (h *hotelRoutes) getHotels(w http.ResponseWriter, req *http.Request) {
 
 	// all request validations are located in separate validateRequest middleware
-	// parse encoded query params to map
-	params, _ := url.ParseQuery(req.URL.Query().Encode())
-
-	// parse search query
-	text := params.Get("query")
-
-	// convert limit value to string
-	limit, _ := strconv.Atoi(params.Get("limit"))
+	// get query and limit params from context
+	text := req.Context().Value(contextQueryKey).(string)
+	limit := req.Context().Value(contextLimitKey).(int)
 
 	filtered := h.hotelService.SearchHotels(text, limit)
 

@@ -1,4 +1,4 @@
-package validator
+package http
 
 import (
 	"log"
@@ -9,9 +9,7 @@ import (
 	"testing"
 )
 
-const URL = "http://localhost:4000/hotels"
-
-func TestReponseOK(t *testing.T) {
+func TestValidResponse(t *testing.T) {
 
 	query := "?query=bav&limit=4"
 	req := httptest.NewRequest(http.MethodGet, URL+query, nil)
@@ -33,26 +31,26 @@ func TestReponseOK(t *testing.T) {
 		}
 
 		// check if "query" word is exists
-		if _, ok := params["query"]; !ok {
+		if _, ok := params[string(contextQueryKey)]; !ok {
 			http.Error(rr, "'query' parameter does not exist or bad value!", http.StatusBadRequest)
 			return
 		}
 
 		// check if "limit" word is exists
-		if _, ok := params["limit"]; !ok {
+		if _, ok := params[string(contextLimitKey)]; !ok {
 			http.Error(rr, "'limit' parameter does not exist or bad value!", http.StatusBadRequest)
 			return
 		}
 
 		// parse search query
-		text := params.Get("query")
+		text := params.Get(string(contextQueryKey))
 		if text == "" {
 			http.Error(rr, "'query' value is empty!", http.StatusBadRequest)
 			return
 		}
 
 		// convert limit value to string
-		_, err = strconv.Atoi(params.Get("limit"))
+		_, err = strconv.Atoi(params.Get(string(contextLimitKey)))
 		if err != nil {
 			log.Println(err)
 			http.Error(rr, "'limit' value must be integer!", http.StatusBadRequest)
@@ -83,7 +81,7 @@ func TestReponseBadRequest(t *testing.T) {
 		params, _ := url.ParseQuery(req.URL.Query().Encode())
 
 		// check if "query" word is exists
-		if _, ok := params["query"]; !ok {
+		if _, ok := params[string(contextQueryKey)]; !ok {
 			http.Error(rr, "'query' parameter does not exist or bad value!", http.StatusBadRequest)
 			return
 		}
@@ -165,7 +163,7 @@ func TestInvalidLimit(t *testing.T) {
 		params, _ := url.ParseQuery(req.URL.Query().Encode())
 
 		// check if "limit" word is exists
-		if _, ok := params["limit"]; !ok {
+		if _, ok := params[string(contextLimitKey)]; !ok {
 			http.Error(rr, "'limit' parameter does not exist or bad value!", http.StatusBadRequest)
 			return
 		}
@@ -194,7 +192,7 @@ func TestLimitQueryNotNumber(t *testing.T) {
 		params, _ := url.ParseQuery(req.URL.Query().Encode())
 
 		// convert limit value to string
-		_, err := strconv.Atoi(params.Get("limit"))
+		_, err := strconv.Atoi(params.Get(string(contextLimitKey)))
 		if err != nil {
 			http.Error(rr, "'limit' value must be integer!", http.StatusBadRequest)
 			return

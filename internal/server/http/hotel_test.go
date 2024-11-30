@@ -31,7 +31,9 @@ func TestReponseOK(t *testing.T) {
 	}
 
 	query := "?query=bav&limit=4"
-	req := httptest.NewRequestWithContext(context.Background(), http.MethodGet, URL+query, nil)
+	ctx := context.WithValue(context.Background(), contextQueryKey, "bav")
+	ctx = context.WithValue(ctx, contextLimitKey, 4)
+	req := httptest.NewRequestWithContext(ctx, http.MethodGet, URL+query, nil)
 	rr := httptest.NewRecorder()
 
 	h.getHotels(rr, req)
