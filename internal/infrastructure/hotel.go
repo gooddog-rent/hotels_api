@@ -1,4 +1,4 @@
-package treedb
+package infrastructure
 
 import (
 	"hotels_api/internal/entity"
@@ -7,6 +7,9 @@ import (
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 )
+
+// static interface implementation check for convinience
+var _ Hotel = (*WatcherRepo)(nil)
 
 // Search method returns filtered request with hotels
 func (h *WatcherRepo) SearchHotels(text string, limit int) *entity.ResponseHotels {

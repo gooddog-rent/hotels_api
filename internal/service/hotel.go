@@ -2,7 +2,7 @@ package service
 
 import (
 	"hotels_api/internal/entity"
-	"hotels_api/internal/infra"
+	infra "hotels_api/internal/infrastructure"
 )
 
 type HotelService struct {

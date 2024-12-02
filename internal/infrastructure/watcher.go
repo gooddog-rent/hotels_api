@@ -1,4 +1,4 @@
-package treedb
+package infrastructure
 
 import (
 	"encoding/json"
@@ -12,7 +12,7 @@ import (
 )
 
 // static interface implementation check for convinience
-// var _ infra.FileWatcher = (*WatcherRepo)(nil)
+var _ FileWatcher = (*WatcherRepo)(nil)
 
 type WatcherRepo struct {
 	tree *TreeRepo

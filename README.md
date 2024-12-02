@@ -40,7 +40,7 @@ Returns json data with list of region and hotels.
 
 - **URL**
 
-  /hotels
+  /v1/hotels
 
 - **Method:**
 
@@ -107,5 +107,5 @@ Returns json data with list of region and hotels.
 - **Sample Call:**
 
   ```shell
-  curl "http://localhost:4000/hotels?query=resort&limit=10"
+  curl "http://localhost:4000/v1/hotels?query=resort&limit=10"
   ```

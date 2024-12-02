@@ -1,4 +1,4 @@
-package treedb
+package infrastructure
 
 import (
 	"hotels_api/internal/entity"
@@ -6,6 +6,9 @@ import (
 	"strings"
 	"sync"
 )
+
+// static interface implementation check for convinience
+var _ Tree = (*TreeRepo)(nil)
 
 type TreeRepo struct {
 	searchTree *entity.SearchTree

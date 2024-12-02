@@ -1,4 +1,4 @@
-package treedb
+package infrastructure
 
 import (
 	"os"
@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	TEMP_DIR     = "../../../test/temp/"
+	TEMP_DIR     = "../../test/temp/"
 	TEMP_FILE    = "temp.*.json"
 	TEST_PATTERN = "test_watcher_service_"
 )

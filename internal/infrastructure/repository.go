@@ -1,8 +1,7 @@
-package infra
+package infrastructure
 
 import (
 	"hotels_api/internal/entity"
-	"hotels_api/internal/infra/treedb"
 	"hotels_api/pkg/suffixtree"
 	"time"
 )
@@ -36,6 +35,6 @@ type Repositories struct {
 
 func NewRepositories(tree *suffixtree.SuffixTree, HOTELS_PATH string) *Repositories {
 	return &Repositories{
-		Hotel: treedb.NewWatcherRepo(tree, HOTELS_PATH, 15*time.Second),
+		Hotel: NewWatcherRepo(tree, HOTELS_PATH, 15*time.Second),
 	}
 }

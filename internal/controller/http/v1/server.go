@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"hotels_api/internal/entity"
-	"hotels_api/internal/infra"
+	infra "hotels_api/internal/infrastructure"
 
 	"hotels_api/internal/service"
 	"hotels_api/pkg/cache"
@@ -75,7 +75,7 @@ func RunServer(HTTP_PORT, HOTELS_PATH string) {
 		brotlihandler.CompressHandler,
 	)
 
-	mux.HandleFunc("/hotels", mid.Bind(middlewaresPerRoute, r.getHotels))
+	mux.HandleFunc("/v1/hotels", mid.Bind(middlewaresPerRoute, r.getHotels))
 	fmt.Printf("🏨 Hotels API service listening requests on port: %s\n", HTTP_PORT)
 
 	// best practice to use timeout

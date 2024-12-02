@@ -3,7 +3,7 @@ package http
 import (
 	"context"
 	"encoding/json"
-	"hotels_api/internal/infra"
+	infra "hotels_api/internal/infrastructure"
 	"hotels_api/internal/service"
 	"hotels_api/pkg/suffixtree"
 	"net/http"

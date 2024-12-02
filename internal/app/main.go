@@ -1,7 +1,7 @@
 package app
 
 import (
-	"hotels_api/internal/server/http"
+	"hotels_api/internal/controller/http/v1"
 )
 
 func Run() {

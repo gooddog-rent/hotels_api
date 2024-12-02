@@ -1,4 +1,4 @@
-package treedb
+package infrastructure
 
 import (
 	"hotels_api/internal/entity"
