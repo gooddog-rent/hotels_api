@@ -86,7 +86,7 @@ tasks:
     silent: true
     cmds:
       - echo "🧪 Running Unit Tests" 
-      - go test -v -cover ./...
+      - go test -v -race -cover ./...
       
       # clear temp test files. comment if you want to keep them
       - rm -rf ./test/temp/**
