@@ -1,18 +1,19 @@
 package service
 
 import (
-	"hotels_api/internal/entity"
+	"context"
+	"hotels_api/internal/domain"
 	infra "hotels_api/internal/infrastructure"
 )
 
 type HotelService struct {
-	hotelRepo infra.Hotel
+	hotelRepo infra.Searcher
 }
 
-func NewHotelService(hotelRepo infra.Hotel) *HotelService {
+func NewHotelService(hotelRepo infra.Searcher) *HotelService {
 	return &HotelService{hotelRepo: hotelRepo}
 }
 
-func (h *HotelService) SearchHotels(text string, limit int) *entity.ResponseHotels {
-	return h.hotelRepo.SearchHotels(text, limit)
+func (h *HotelService) SearchHotels(ctx context.Context, text string, limit int) (*domain.Locations, error) {
+	return h.hotelRepo.SearchHotels(ctx, text, limit)
 }

@@ -12,7 +12,7 @@ env:
   GOGET: go get
   GOMOD: go mod
   GOINST: go install
-  # PLATFORMS: ["darwin", "linux", "windows"]
+  
   PLATFORM: windows.exe
 
   MODULE_NAME: hotels_api
@@ -22,10 +22,12 @@ env:
 
   # App entrypoint path
   APP_ENTRYPOINT: ./cmd/app
+  API_DOCS_ENTRYPOINT: ./cmd/api-docs
 
-# Global variables
-# vars:
-#   PLATFORMS: ["darwin", "linux", "windows.exe"]
+  # Database parameters
+  DB_DRIVER: sqlite3
+  DSN: ./hotels_test_db.sql
+  MIGRATIONS_PATH: ./migrations
 
 tasks:
   
@@ -35,11 +37,49 @@ tasks:
       - echo "⚙️ Debug info"
       - if [ $(go env GOOS) == "windows" ]; then echo "Windows OK!"; fi
 
+  # Install dependencies
+  install:
+    silent: true
+    cmds:
+      - echo "📦 Install Dependencies"
+      - go mod tidy && go mod verify
+
+  # Database migrations (goose)
+  # Create new migrations
+  create:
+    silent: true
+    cmds:
+      - echo "💾 Create Database Migrations"
+      - GOOSE_DRIVER=${DB_DRIVER} GOOSE_DBSTRING=${DSN} goose -dir=${MIGRATIONS_PATH} create add_regions_table sql
+      - GOOSE_DRIVER=${DB_DRIVER} GOOSE_DBSTRING=${DSN} goose -dir=${MIGRATIONS_PATH} create add_hotels_table sql
+      - GOOSE_DRIVER=${DB_DRIVER} GOOSE_DBSTRING=${DSN} goose -dir=${MIGRATIONS_PATH} create add_hotels_fts_indexed_table sql
+
+  # Apply all migrations
+  up:
+    silent: true
+    cmds:
+      - echo "💾 Apply Database Migrations"
+      - GOOSE_DRIVER=${DB_DRIVER} GOOSE_DBSTRING=${DSN} goose -dir=${MIGRATIONS_PATH} up
+
+  # Roll back all migrations
+  reset:
+    silent: true
+    cmds:
+      - echo "💾 Apply Database Migrations"
+      - GOOSE_DRIVER=${DB_DRIVER} GOOSE_DBSTRING=${DSN} goose -dir=${MIGRATIONS_PATH} reset
+
   # Build app
   build:
     silent: true
     cmds:
-      - $GOBUILD -o ${BINARY_NAME}_${PLATFORM} $APP_ENTRYPOINT
+      - $GOBUILD -o ${BINARY_NAME}_${PLATFORM} --tags "fts5" $APP_ENTRYPOINT
+      - echo "📦 Build Done"
+
+  # Build api docs
+  build:docs:
+    silent: true
+    cmds:
+      - $GOBUILD -o ${BINARY_NAME}_${PLATFORM} $API_DOCS_ENTRYPOINT
       - echo "📦 Build Done"
 
   # Build app for all platforms
@@ -55,6 +95,14 @@ tasks:
     deps: [build]
     cmds:
       - echo "🚀 Running App"
+      - ./${BINARY_NAME}_${PLATFORM}
+
+  # Build and run API docs server
+  run:docs:
+    silent: true
+    deps: [build:docs]
+    cmds:
+      - echo "🚀 Running API Docs Server"
       - ./${BINARY_NAME}_${PLATFORM}
 
   # Build Docker Image
@@ -86,7 +134,7 @@ tasks:
     silent: true
     cmds:
       - echo "🧪 Running Unit Tests" 
-      - go test -v -race -cover ./...
+      - go test -v -race -cover -count=1 --tags "fts5" ./...
       
       # clear temp test files. comment if you want to keep them
       - rm -rf ./test/temp/**

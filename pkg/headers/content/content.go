@@ -4,7 +4,7 @@ import (
 	"net/http"
 )
 
-// CustomHeaders middleware handler setup CORS and other headers
+// ContentTypeHeaders middleware handler setup content type headers
 func ContentTypeHeaders(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 

@@ -12,5 +12,11 @@ app.exe
 # hotels list
 /hotels
 
+# hotels database
+*.sql
+
 # test temp directory and files
 /test/temp/
+
+# VS Code folder
+/.vscode

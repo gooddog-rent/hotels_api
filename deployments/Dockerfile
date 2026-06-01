@@ -1,4 +1,4 @@
-FROM golang:alpine3.20 AS builder
+FROM golang:alpine3.23 AS builder
 
 # enable go modules
 ENV GO111MODULE=on
@@ -15,7 +15,7 @@ RUN go mod download
 COPY . .
 
 # build binary without debug info
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags='-s -w'
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build --tags "fts5" -ldflags='-s -w'
 
 # generate clean, final image
 FROM scratch

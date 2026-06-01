@@ -12,12 +12,6 @@ import (
 func ValidateRequest(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 
-		// check on correct request method
-		if req.Method != http.MethodGet {
-			http.Error(w, "Wrong method used! Only GET method allowed.", http.StatusMethodNotAllowed)
-			return
-		}
-
 		// parse encoded query params to map
 		params, err := url.ParseQuery(req.URL.Query().Encode())
 		if err != nil {

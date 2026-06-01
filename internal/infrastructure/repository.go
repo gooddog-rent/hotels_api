@@ -1,40 +1,101 @@
 package infrastructure
 
 import (
-	"hotels_api/internal/entity"
-	"hotels_api/pkg/suffixtree"
+	"context"
+	"database/sql"
+	"fmt"
+	"hotels_api/internal/domain"
+	"log"
+	"sync"
 	"time"
+
+	"github.com/pressly/goose/v3"
 )
 
-type Tree interface {
-	BuildTree(l *entity.LocationsStore) *entity.SearchTree
-}
+// static interface implementation check for convinience
+var _ Searcher = (*SQLiteRepo)(nil)
 
-type Hotel interface {
-	SearchHotels(text string, limit int) *entity.ResponseHotels
-	FileWatcher
-}
-
-type Watcher interface {
-	WatchFile() error
-}
-
-type Parser interface {
-	Update()
-	Parse(locations *entity.LocationsStore)
-}
-
-type FileWatcher interface {
-	Watcher
-	Parser
+type Searcher interface {
+	SearchHotels(ctx context.Context, text string, limit int) (*domain.Locations, error)
 }
 
 type Repositories struct {
-	Hotel
+	Searcher
+	DBConnection *SQLiteRepo
 }
 
-func NewRepositories(tree *suffixtree.SuffixTree, HOTELS_PATH string) *Repositories {
-	return &Repositories{
-		Hotel: NewWatcherRepo(tree, HOTELS_PATH, 15*time.Second),
+// SQLiteRepo implementation
+type SQLiteRepo struct {
+	DB *sql.DB
+	mu sync.RWMutex
+}
+
+func NewRepositories(HOTELS_PATH string) (*Repositories, error) {
+
+	// init sqlite3 db
+	dbRepo, err := NewSQLiteRepo(HOTELS_PATH)
+	if err != nil {
+		return nil, err
 	}
+
+	return &Repositories{
+		Searcher:     dbRepo,
+		DBConnection: dbRepo,
+	}, nil
+}
+
+func NewSQLiteRepo(filepath string) (*SQLiteRepo, error) {
+
+	db, err := sql.Open("sqlite3", filepath)
+	if err != nil {
+		return nil, fmt.Errorf("failed to connect to database: %w", err)
+	}
+
+	const maxOpenConns = 20
+	const maxIdleConns = 20
+	const maxIdleTime = "15m"
+
+	// Set the maximum number of open (in-use + idle) connections in the pool. Note that
+	// passing a value less than or equal to 0 will mean there is no limit.
+	db.SetMaxOpenConns(maxOpenConns)
+
+	// Set the maximum number of idle connections in the pool. Again, passing a value
+	// less than or equal to 0 will mean there is no limit.
+	db.SetMaxIdleConns(maxIdleConns)
+
+	duration, err := time.ParseDuration(maxIdleTime)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse maxIdleTime duration %w", err)
+	}
+
+	// Set the maximum idle timeout.
+	db.SetConnMaxIdleTime(duration)
+
+	const timeout = 5 * time.Second
+
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+
+	if err := db.PingContext(ctx); err != nil {
+		log.Fatal(err)
+	}
+
+	if err := InitDB(context.Background(), db); err != nil {
+		log.Fatalln(err)
+	}
+	log.Println("Connected to the sqlite3 database")
+
+	return &SQLiteRepo{
+		DB: db,
+	}, nil
+}
+
+func InitDB(ctx context.Context, db *sql.DB) error {
+
+	err := goose.Up(db, "migrations")
+	if err != nil {
+		return fmt.Errorf("failed to apply migrations: %w", err)
+	}
+
+	return nil
 }

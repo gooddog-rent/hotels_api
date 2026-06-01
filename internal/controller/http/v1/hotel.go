@@ -3,7 +3,6 @@ package http
 import (
 	"encoding/json"
 	"hotels_api/internal/service"
-	"log"
 	"net/http"
 )
 
@@ -16,25 +15,59 @@ type hotelRoutes struct {
 	hotelService service.Hotel
 }
 
+// ResponseLocations struct dto store output response regions and hotels data
+type ResponseLocations struct {
+	Hotels map[string][]string `json:"hotels"`
+}
+
+func NewHotelController(hotelService service.Hotel) *hotelRoutes {
+	return &hotelRoutes{
+		hotelService: hotelService,
+	}
+}
+
 // GetHotels method handle requests and response with filtered hotels
-func (h *hotelRoutes) getHotels(w http.ResponseWriter, req *http.Request) {
+func (h *hotelRoutes) GetHotels(w http.ResponseWriter, req *http.Request) {
 
 	// all request validations are located in separate validateRequest middleware
 	// get query and limit params from context
-	text := req.Context().Value(contextQueryKey).(string)
-	limit := req.Context().Value(contextLimitKey).(int)
+	text, ok := req.Context().Value(contextQueryKey).(string)
+	if !ok {
+		http.Error(w, "query value must be string type!", http.StatusBadRequest)
+		return
+	}
 
-	filtered := h.hotelService.SearchHotels(text, limit)
+	limit, ok := req.Context().Value(contextLimitKey).(int)
+	if !ok {
+		http.Error(w, "limit value must be integer type!", http.StatusBadRequest)
+		return
+	}
 
-	out, err := json.Marshal(filtered)
+	// db read timeout
+	/* contextDBTimeout := 20 * time.Second
+	ctxTimeout, cancel := context.WithTimeoutCause(req.Context(), contextDBTimeout, errors.New("Read from DB timeout!"))
+	defer cancel() */
+
+	filtered, err := h.hotelService.SearchHotels(req.Context(), text, limit)
 	if err != nil {
-		log.Println(err)
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+
+	// convert to response dto
+	responseHotels := &ResponseLocations{
+		Hotels: filtered.Hotels,
+	}
+
+	out, err := json.Marshal(responseHotels)
+	if err != nil {
 		http.Error(w, "500 Internal Server Error!", http.StatusInternalServerError)
 		return
 	}
 
 	_, err = w.Write(out)
 	if err != nil {
-		log.Println("Response result write error!", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 }

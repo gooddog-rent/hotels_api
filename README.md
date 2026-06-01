@@ -1,4 +1,4 @@
-# 🏨 Starightforward hotels list API with one route
+# 🏨 Starightforward API to search regions and hotels with one endpoint
 
 ---
 
@@ -8,17 +8,13 @@
 
 ## Description
 
-Simple API with one json custom data file.
+Simple search API to find regions and hotels.
 
 ### Features
 
-🔃 - auto update file changes (no need to restart binary)
+🔍 - fast full-text search
 
-⚙️ - one JSON flexible file to modify your data
-
-✋ - rate limiter for highload perfomance
-
-💵 - in-memory cache
+✋ - rate limiter to secure from DDoS attacks
 
 🗜️ - gzip or brotli compression (more then body length 1400 bytes)
 
@@ -40,7 +36,7 @@ Returns json data with list of region and hotels.
 
 - **URL**
 
-  /v1/hotels
+  api/v1/hotels
 
 - **Method:**
 
@@ -107,5 +103,5 @@ Returns json data with list of region and hotels.
 - **Sample Call:**
 
   ```shell
-  curl "http://localhost:4000/v1/hotels?query=resort&limit=10"
+  curl "http://localhost:4000/api/v1/hotels?query=resort&limit=10"
   ```

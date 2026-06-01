@@ -1,16 +1,17 @@
 package service
 
 import (
-	"hotels_api/internal/entity"
+	"context"
+	"hotels_api/internal/domain"
 	infra "hotels_api/internal/infrastructure"
 )
 
 type Hotel interface {
-	SearchHotels(text string, limit int) *entity.ResponseHotels
+	SearchHotels(ctx context.Context, text string, limit int) (*domain.Locations, error)
 }
 
 type Services struct {
-	Hotel Hotel
+	Searcher infra.Searcher
 }
 
 type ServicesDependencies struct {
@@ -19,6 +20,6 @@ type ServicesDependencies struct {
 
 func NewServices(deps ServicesDependencies) *Services {
 	return &Services{
-		Hotel: NewHotelService(deps.Repos.Hotel),
+		Searcher: NewHotelService(deps.Repos.Searcher),
 	}
 }

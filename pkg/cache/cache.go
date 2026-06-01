@@ -16,19 +16,19 @@ type Item struct {
 	Expiration int64
 }
 
+// Cache struct for caching strings in memory
+type Cache struct {
+	items    map[string]Item
+	mu       *sync.RWMutex
+	duration string
+}
+
 // Expired returns true if the item has expired.
 func (item Item) Expired() bool {
 	if item.Expiration == 0 {
 		return false
 	}
 	return time.Now().UnixNano() > item.Expiration
-}
-
-// Cache struct for caching strings in memory
-type Cache struct {
-	items    map[string]Item
-	mu       *sync.RWMutex
-	duration string
 }
 
 // Get a cached content by key
@@ -56,10 +56,10 @@ func (c Cache) Set(key string, content []byte, duration time.Duration) {
 }
 
 // NewCache creates a new in memory Cache
-func NewCache() *Cache {
+func NewCache(cacheDuration string) *Cache {
 	return &Cache{
 		items:    make(map[string]Item),
 		mu:       &sync.RWMutex{},
-		duration: "2m",
+		duration: cacheDuration,
 	}
 }

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"hotels_api/internal/app"
+	app "hotels_api/internal"
 )
 
 func main() {
@@ -9,5 +9,6 @@ func main() {
 	// init .env file
 	app.InitEnv(".env")
 
+	// run app
 	app.Run()
 }

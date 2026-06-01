@@ -33,10 +33,10 @@ func (c *Cache) CacheResponse(next http.Handler) http.Handler {
 
 			if d, err := time.ParseDuration(c.duration); err == nil {
 
-				// log.Printf("New page cached: %s for %s\n", req.RequestURI, c.duration)
+				// log.Printf("New data cached: %s for %s\n", req.RequestURI, c.duration)
 				CacheStore.Set(req.RequestURI, content, d)
 			} else {
-				log.Printf("Page not cached. err: %s\n", err)
+				log.Printf("Data not cached. err: %s\n", err)
 			}
 
 			_, err := w.Write(content)

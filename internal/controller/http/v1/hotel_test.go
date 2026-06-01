@@ -4,31 +4,20 @@ import (
 	"context"
 	"encoding/json"
 	infra "hotels_api/internal/infrastructure"
-	"hotels_api/internal/service"
-	"hotels_api/pkg/suffixtree"
+	svc "hotels_api/internal/service"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 )
 
-const URL = "http://localhost:4000/hotels"
+const URL = "http://localhost:4000/api/v1/hotels"
 
 func TestReponseOK(t *testing.T) {
 
-	// TODO: mock
-	tree := suffixtree.NewGeneralizedSuffixTree()
-
-	repositories := infra.NewRepositories(tree, "")
-
-	deps := service.ServicesDependencies{
-		Repos: repositories,
-	}
-
-	services := service.NewServices(deps)
-
-	h := &hotelRoutes{
-		hotelService: services.Hotel,
-	}
+	// arrange
+	searchRepoMock := infra.NewMockDB()
+	searchServiceMock := svc.NewHotelService(searchRepoMock)
+	hotelController := NewHotelController(searchServiceMock)
 
 	query := "?query=bav&limit=4"
 	ctx := context.WithValue(context.Background(), contextQueryKey, "bav")
@@ -36,13 +25,36 @@ func TestReponseOK(t *testing.T) {
 	req := httptest.NewRequestWithContext(ctx, http.MethodGet, URL+query, nil)
 	rr := httptest.NewRecorder()
 
-	h.getHotels(rr, req)
+	// act
+	hotelController.GetHotels(rr, req)
 
 	resp := rr.Result()
 	defer resp.Body.Close()
 
-	if resp.StatusCode != http.StatusOK || req.Method != http.MethodGet {
-		t.Errorf("Bad response status code! Excpect: %d Have: %d", http.StatusOK, resp.StatusCode)
+	// assert
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("handler returns wrong status code: got %v want %v", status, http.StatusOK)
+	}
+
+	if req.Method != http.MethodGet {
+		t.Errorf("Wrong request method: got %v want %v", req.Method, http.MethodGet)
+	}
+
+	output := ResponseLocations{
+		Hotels: map[string][]string{
+			"Bavaro":    {"Some Bavaro hotel", "Resort Bavaro Test"},
+			"La Romana": {"Some La Romana bav hotel", "Resort La Romana bavaro Test"},
+		},
+	}
+
+	outputJson, err := json.Marshal(output)
+	if err != nil {
+		t.Errorf("Cannot parse json struct! %v", err)
+	}
+
+	expected := string(outputJson)
+	if rr.Body.String() != expected {
+		t.Errorf("handler returns unexpected body: got %v want %v", rr.Body.String(), expected)
 	}
 }
 

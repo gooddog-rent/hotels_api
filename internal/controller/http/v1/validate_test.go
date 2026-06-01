@@ -17,12 +17,6 @@ func TestValidResponse(t *testing.T) {
 
 	validateRequestHandler := func(_ http.ResponseWriter, req *http.Request) {
 
-		// check on correct request method
-		if req.Method != http.MethodGet {
-			http.Error(rr, "Wrong method used! Only GET method allowed.", http.StatusMethodNotAllowed)
-			return
-		}
-
 		// parse encoded query params to map
 		params, err := url.ParseQuery(req.URL.Query().Encode())
 		if err != nil {

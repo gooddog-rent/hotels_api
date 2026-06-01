@@ -1,6 +1,7 @@
 package limiter
 
 import (
+	"context"
 	"log"
 	"net"
 	"net/http"
@@ -13,7 +14,10 @@ import (
 // Run a background goroutine to remove old entries from the visitors map.
 func init() {
 	timeout := 3 * time.Minute
-	go cleanupVisitors(timeout)
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	go cleanupVisitors(ctx, timeout)
 }
 
 // Create a custom visitor struct which holds the rate limiter for each
@@ -52,9 +56,18 @@ func getVisitor(ip string) *rate.Limiter {
 
 // Every minute check the map for visitors that haven't been seen for
 // more than 3 minutes and delete the entries.
-func cleanupVisitors(timeout time.Duration) {
+func cleanupVisitors(ctx context.Context, timeout time.Duration) {
+
+	ticker := time.NewTicker(time.Minute)
+	defer ticker.Stop()
+
 	for {
-		time.Sleep(time.Minute)
+
+		select {
+		case <-ticker.C:
+		case <-ctx.Done():
+			return
+		}
 
 		mu.Lock()
 		for ip, v := range visitors {
