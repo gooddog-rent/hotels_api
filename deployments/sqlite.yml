@@ -1,0 +1,21 @@
+services:
+  sqlite:
+    image: sqlite:latest
+    container_name: sqlite-container
+    environment:
+      SQLITE_USER: ${DB_USER}
+      SQLITE_PASSWORD: ${DB_PASSWORD}
+      SQLITE_DB: ${DB_NAME}
+    ports:
+      - "${DB_PORT}:5432"
+    volumes:
+      - sqlite-data:/var/lib/sqlite/data
+    networks:
+      - dev-network
+
+volumes:
+  sqlite-data:
+
+networks:
+  dev-network:
+    driver: bridge

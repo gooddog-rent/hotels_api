@@ -1,7 +1,7 @@
 name: Tests
 on:
   push:
-    branches: [develop]
+    branches: [develop, with-sqlite]
 
 jobs:
   run_tests:
@@ -25,7 +25,7 @@ jobs:
         run: |
           echo "HTTP_PORT=$HTTP_PORT" >> .env
           echo "HOTELS_PATH=$HOTELS_PATH" >> .env
-          
+
       - name: Check go mod
         run: go mod tidy
 
