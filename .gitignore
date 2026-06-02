@@ -13,7 +13,7 @@ app.exe
 /hotels
 
 # hotels database
-*.sql
+/*.sql
 
 # test temp directory and files
 /test/temp/
