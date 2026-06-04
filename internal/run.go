@@ -4,24 +4,27 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	ctrl "hotels_api/internal/controller/http/v1"
-	infra "hotels_api/internal/infrastructure"
 
-	"hotels_api/internal/service"
-	"hotels_api/pkg/cache"
-	"hotels_api/pkg/headers/content"
-	"hotels_api/pkg/headers/cors"
-	"hotels_api/pkg/headers/secure"
-	"hotels_api/pkg/limiter"
-	"hotels_api/pkg/logger"
+	ctrl "github.com/gooddog-rent/hotels_api/internal/controller/http/v1"
+	infra "github.com/gooddog-rent/hotels_api/internal/infrastructure"
+
 	"os"
 	"time"
 
-	mid "hotels_api/pkg/middleware"
+	"github.com/gooddog-rent/hotels_api/internal/service"
+	"github.com/gooddog-rent/hotels_api/pkg/cache"
+	"github.com/gooddog-rent/hotels_api/pkg/headers/content"
+	"github.com/gooddog-rent/hotels_api/pkg/headers/cors"
+	"github.com/gooddog-rent/hotels_api/pkg/headers/secure"
+	"github.com/gooddog-rent/hotels_api/pkg/limiter"
+	"github.com/gooddog-rent/hotels_api/pkg/logger"
+
 	"log"
 	"net/http"
 	"os/signal"
 	"syscall"
+
+	mid "github.com/gooddog-rent/hotels_api/pkg/middleware"
 
 	"github.com/sh7dm/brotlihandler"
 )

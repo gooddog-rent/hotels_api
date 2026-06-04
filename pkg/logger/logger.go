@@ -2,11 +2,12 @@ package logger
 
 import (
 	"fmt"
-	"hotels_api/pkg/headers/status"
 	"net/http"
 	"os"
 	"text/tabwriter"
 	"time"
+
+	"github.com/gooddog-rent/hotels_api/pkg/headers/status"
 )
 
 // Log middleware handler shows network data log info

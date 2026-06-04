@@ -3,11 +3,12 @@ package http
 import (
 	"context"
 	"encoding/json"
-	infra "hotels_api/internal/infrastructure"
-	svc "hotels_api/internal/service"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	infra "github.com/gooddog-rent/hotels_api/internal/infrastructure"
+	svc "github.com/gooddog-rent/hotels_api/internal/service"
 )
 
 const URL = "http://localhost:4000/api/v1/hotels"

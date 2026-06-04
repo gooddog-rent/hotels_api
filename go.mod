@@ -1,4 +1,4 @@
-module hotels_api
+module github.com/gooddog-rent/hotels_api
 
 go 1.24
 

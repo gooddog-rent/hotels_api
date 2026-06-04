@@ -1,7 +1,7 @@
 package main
 
 import (
-	app "hotels_api/internal"
+	app "github.com/gooddog-rent/hotels_api/internal"
 )
 
 func main() {

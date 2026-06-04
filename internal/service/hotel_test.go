@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 
-	"hotels_api/internal/domain"
+	"github.com/gooddog-rent/hotels_api/internal/domain"
 )
 
 type MockSearcher struct {

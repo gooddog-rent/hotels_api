@@ -5,7 +5,8 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"hotels_api/internal/domain"
+
+	"github.com/gooddog-rent/hotels_api/internal/domain"
 
 	sq "github.com/Masterminds/squirrel"
 	_ "github.com/mattn/go-sqlite3"

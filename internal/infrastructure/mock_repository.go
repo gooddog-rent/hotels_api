@@ -2,7 +2,8 @@ package infrastructure
 
 import (
 	"context"
-	"hotels_api/internal/domain"
+
+	"github.com/gooddog-rent/hotels_api/internal/domain"
 )
 
 // static check interface implementation

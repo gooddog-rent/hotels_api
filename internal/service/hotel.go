@@ -2,8 +2,9 @@ package service
 
 import (
 	"context"
-	"hotels_api/internal/domain"
-	infra "hotels_api/internal/infrastructure"
+
+	"github.com/gooddog-rent/hotels_api/internal/domain"
+	infra "github.com/gooddog-rent/hotels_api/internal/infrastructure"
 )
 
 type HotelService struct {

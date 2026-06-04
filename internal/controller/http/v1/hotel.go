@@ -2,8 +2,9 @@ package http
 
 import (
 	"encoding/json"
-	"hotels_api/internal/service"
 	"net/http"
+
+	"github.com/gooddog-rent/hotels_api/internal/service"
 )
 
 type contextKey string

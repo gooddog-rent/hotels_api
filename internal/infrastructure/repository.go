@@ -4,10 +4,11 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"hotels_api/internal/domain"
 	"log"
 	"sync"
 	"time"
+
+	"github.com/gooddog-rent/hotels_api/internal/domain"
 
 	"github.com/pressly/goose/v3"
 )

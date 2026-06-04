@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
-	"hotels_api/pkg/logger"
-	mid "hotels_api/pkg/middleware"
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/gooddog-rent/hotels_api/pkg/logger"
+	mid "github.com/gooddog-rent/hotels_api/pkg/middleware"
 )
 
 // OpenAPI docs
