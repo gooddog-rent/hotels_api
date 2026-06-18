@@ -30,7 +30,7 @@ func (s *SQLiteRepo) SearchHotels(ctx context.Context, text string, limit int) (
 		From("hotels_fts AS fts").
 		Join("regions AS reg ON fts.region_id = reg.region_id").
 		Where("fts.title MATCH ?", text).
-		// OrderBy("rank").
+		OrderBy("bm25(hotels_fts)").
 		Limit(uint64(limit)).
 		ToSql()
 
@@ -38,7 +38,7 @@ func (s *SQLiteRepo) SearchHotels(ctx context.Context, text string, limit int) (
 		return nil, fmt.Errorf("failed to build query: %w", err)
 	}
 
-	rows, err := s.DB.Query(query, args...)
+	rows, err := s.DB.QueryContext(ctx, query, args...)
 	if err != nil || errors.Is(err, sql.ErrNoRows) {
 		return nil, fmt.Errorf("failed to execute query: %w", err)
 	}
