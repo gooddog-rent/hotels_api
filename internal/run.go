@@ -12,31 +12,20 @@ import (
 	"time"
 
 	"github.com/gooddog-rent/hotels_api/internal/service"
-	"github.com/gooddog-rent/hotels_api/pkg/cache"
-	"github.com/gooddog-rent/hotels_api/pkg/headers/content"
-	"github.com/gooddog-rent/hotels_api/pkg/headers/cors"
-	"github.com/gooddog-rent/hotels_api/pkg/headers/secure"
-	"github.com/gooddog-rent/hotels_api/pkg/limiter"
-	"github.com/gooddog-rent/hotels_api/pkg/logger"
 
 	"log"
 	"net/http"
 	"os/signal"
 	"syscall"
 
-	mid "github.com/gooddog-rent/hotels_api/pkg/middleware"
-
-	"github.com/sh7dm/brotlihandler"
+	"github.com/iqhater/pkg/headers"
+	mid "github.com/iqhater/pkg/middleware"
 )
 
 func Run() {
 
 	// init config environments
 	cfg := NewConfig()
-
-	// init cache storage
-	c := cache.NewCache("2m")
-	cache.CacheStore = c
 
 	// init repositories
 	repositories, err := infra.NewRepositories(cfg.HOTELS_PATH)
@@ -61,19 +50,25 @@ func Run() {
 
 	// init middlewares per one route
 	midMain := mid.Middlewares(
-		c.CacheHeaders,
-		content.ContentTypeHeaders,
-		cors.CORSHeaders,
-		secure.SecureHeaders,
 		ctrl.ValidateRequest,
-		// c.CacheResponse,
+		mid.Compress,
+		mid.NewCache("2m").CacheResponse,
+		headers.CORSHeaders(headers.CORSConfig{
+			AllowOrigins: []string{"*"},
+			AllowMethods: []string{http.MethodGet, http.MethodOptions},
+			AllowHeaders: []string{"Accept, Content-Type, Content-Length, Accept-Encoding"},
+		}),
+		headers.SecureHeaders,
+		headers.ContentTypeHeaders("application/json"),
 	)
 
 	// init global middlewares
 	middlewaresGlobal := mid.Middlewares(
-		logger.Log,
-		limiter.Limit,
-		brotlihandler.CompressHandler,
+		mid.Recover,
+		mid.RequestID,
+		mid.Log,
+		mid.Limit(3, 7),
+		mid.ContextTimeout(15*time.Second),
 	)
 
 	mux.HandleFunc("GET /api/v1/hotels", mid.Bind(midMain, controller.GetHotels))

@@ -44,11 +44,6 @@ func (h *hotelRoutes) GetHotels(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	// db read timeout
-	/* contextDBTimeout := 20 * time.Second
-	ctxTimeout, cancel := context.WithTimeoutCause(req.Context(), contextDBTimeout, errors.New("Read from DB timeout!"))
-	defer cancel() */
-
 	filtered, err := h.hotelService.SearchHotels(req.Context(), text, limit)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)

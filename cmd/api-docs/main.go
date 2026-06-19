@@ -6,8 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/gooddog-rent/hotels_api/pkg/logger"
-	mid "github.com/gooddog-rent/hotels_api/pkg/middleware"
+	mid "github.com/iqhater/pkg/middleware"
 )
 
 // OpenAPI docs
@@ -19,7 +18,7 @@ func main() {
 	mux.Handle("/api/", http.StripPrefix("/api/", http.FileServer(http.Dir("./api"))))
 
 	// redirect to from / to /api/app/redoc.html
-	mux.HandleFunc("/", mid.Bind(logger.Log, func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/", mid.Bind(mid.Log, func(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/api/app/redoc.html", http.StatusMovedPermanently)
 	}))
 
