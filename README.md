@@ -2,7 +2,7 @@
 
 ---
 
-[![Tests](https://github.com/gooddog-rent/hotels_api/actions/workflows/develop_tests.yml/badge.svg?branch=develop)](https://github.com/gooddog-rent/hotels_api/actions/workflows/develop_tests.yml)
+[![Tests](https://github.com/gooddog-rent/hotels_api/actions/workflows/develop_tests.yml/badge.svg?branch=with-sqlite)](https://github.com/gooddog-rent/hotels_api/actions/workflows/develop_tests.yml)
 
 [![Build and Push Docker image to Registry](https://github.com/gooddog-rent/hotels_api/actions/workflows/push_to_regisrty.yml/badge.svg?branch=master)](https://github.com/gooddog-rent/hotels_api/actions/workflows/push_to_regisrty.yml)
 
