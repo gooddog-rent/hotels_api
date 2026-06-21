@@ -1,8 +1,7 @@
-version: '3'
+version: "3"
 
 # Global environment variables
 env:
-
   # Go parameters
   GOARCH: amd64
   GOBUILD: go build
@@ -12,7 +11,7 @@ env:
   GOGET: go get
   GOMOD: go mod
   GOINST: go install
-  
+
   PLATFORM: windows.exe
 
   MODULE_NAME: hotels_api
@@ -30,7 +29,6 @@ env:
   MIGRATIONS_PATH: ./migrations
 
 tasks:
-  
   # Debug for test Taskfile output
   debug:
     cmds:
@@ -53,6 +51,7 @@ tasks:
       - GOOSE_DRIVER=${DB_DRIVER} GOOSE_DBSTRING=${DSN} goose -dir=${MIGRATIONS_PATH} create add_regions_table sql
       - GOOSE_DRIVER=${DB_DRIVER} GOOSE_DBSTRING=${DSN} goose -dir=${MIGRATIONS_PATH} create add_hotels_table sql
       - GOOSE_DRIVER=${DB_DRIVER} GOOSE_DBSTRING=${DSN} goose -dir=${MIGRATIONS_PATH} create add_hotels_fts_indexed_table sql
+      - GOOSE_DRIVER=${DB_DRIVER} GOOSE_DBSTRING=${DSN} goose -dir=${MIGRATIONS_PATH} create update_hotels_fts_indexed_table_tokenize sql
 
   # Apply all migrations
   up:
@@ -127,15 +126,15 @@ tasks:
     cmds:
       - echo "🧹 Clean App Binaries"
       - for: ["darwin", "linux", "windows"]
-        cmd: if [ $(go env GOOS) == {{ .ITEM }} ]; then rm ${BINARY_NAME}_${PLATFORM}; fi 
+        cmd: if [ $(go env GOOS) == {{ .ITEM }} ]; then rm ${BINARY_NAME}_${PLATFORM}; fi
 
   # Run unit tests
   test:
     silent: true
     cmds:
-      - echo "🧪 Running Unit Tests" 
+      - echo "🧪 Running Unit Tests"
       - go test -v -race -cover -count=1 --tags "fts5" ./...
-      
+
       # clear temp test files. comment if you want to keep them
       - rm -rf ./test/temp/**
 

@@ -26,7 +26,6 @@ func (s *SQLiteRepo) SearchHotels(ctx context.Context, text string, limit int) (
 	sqlStmt := sq.StatementBuilder.PlaceholderFormat(sq.Question)
 
 	query, args, err := sqlStmt.Select("reg.title, fts.title").
-		Distinct().
 		From("hotels_fts AS fts").
 		Join("regions AS reg ON fts.region_id = reg.region_id").
 		Where("fts.title MATCH ?", text).
